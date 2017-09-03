@@ -3,13 +3,14 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class FileReader {
+	
+	public FileReader() {}
 
-	private Scanner scanner;
-
-	public FileReader() {
-
-	}
-
+	/**
+	 * Stores the graph information from the provided text file URL to the provided Graph object
+	 * @param graph The Graph object to store nodes and edges in
+	 * @param fileName The relative path (from the project directory) to the file containing the Graph object
+	 */
 	public void convertFileToGraph(Graph graph, String fileName) {
 		try {
 			File graphFile = new File(fileName);
@@ -22,8 +23,15 @@ public class FileReader {
 		}
 	}
 
+	/**
+	 * Helper function to iterate through the provided text file and parse data
+	 * @param graph Graph object to store the nodes and edges to
+	 * @param graphScanner Scanner object to read the file
+	 */
 	private void processFile(Graph graph, Scanner graphScanner) {
 		String graphLine = "";
+		
+		// Scan for edge information until we reach the file divider (#####)
 		while (graphScanner.hasNext() && !(graphLine = graphScanner.nextLine()).startsWith("###")) {
 			String[] graphEdgeComponents = graphLine.split(" ");
 			if (graphEdgeComponents.length == 3) {
@@ -36,9 +44,10 @@ public class FileReader {
 				graph.addConnection(fromNode, toNode, connectionWeight, true);
 			}
 		}
-
-		while (graphScanner.hasNext()) {
-			String[] graphEdgeComponents = graphScanner.nextLine().split(" ");
+		
+		// Next, scan for node heuristic values until we reach EOF
+		while (graphScanner.hasNext() && !(graphLine = graphScanner.nextLine()).equals("")) {
+			String[] graphEdgeComponents = graphLine.split(" ");
 			if (graphEdgeComponents.length == 2) {
 				String node = graphEdgeComponents[0];
 				double heuristicVal = Double.parseDouble(graphEdgeComponents[1]);
