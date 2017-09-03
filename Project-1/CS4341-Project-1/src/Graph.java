@@ -40,7 +40,7 @@ public class Graph {
         }
     }
 
-    public final GraphNode getGraphNode(String node) {
+    public final GraphNode getGraphNode(final String node) {
         if (!nodeMapping.containsKey(node)) {
             return null;
         }

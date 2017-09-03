@@ -54,7 +54,7 @@ public class GeneralSearch {
      */
     private static boolean isSolution(Graph graph, List<GraphNode> path) {
         GraphNode goalState = graph.getGraphNode(GOAL_STATE);
-        return (path.get(0).equals(goalState));
+        return path.get(0).equals(goalState);
     }
 
     /**
