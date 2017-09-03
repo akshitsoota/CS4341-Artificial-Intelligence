@@ -16,6 +16,7 @@ public class FileReader {
 			Scanner graphScanner = new Scanner(graphFile);
 			processFile(graph, graphScanner);
 		} catch (IOException e) {
+			System.out.println("Please ensure the provided file is valid and not locked");
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();

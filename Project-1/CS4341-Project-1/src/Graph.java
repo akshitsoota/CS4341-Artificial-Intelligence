@@ -53,6 +53,15 @@ public class Graph {
             node.setHeuristicValue(heuristicValue);
         }
     }
+    
+    public final double getHeuristicValue(final String nodeKey) {
+        final GraphNode node;
+        if (nodeMapping.containsKey(nodeKey) && (node = nodeMapping.get(nodeKey)) != null) {
+            return node.getHeuristicValue();
+        } else {
+        	return -1;	// TODO: change this
+        }
+    }
 
     public final List<GraphNode> getAllGraphNodes() {
         final List<GraphNode> nodes = new ArrayList<>();
