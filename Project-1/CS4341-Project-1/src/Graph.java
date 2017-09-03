@@ -40,6 +40,13 @@ public class Graph {
         }
     }
 
+    public final GraphNode getGraphNode(final String node) {
+        if (!nodeMapping.containsKey(node)) {
+            return null;
+        }
+        return nodeMapping.get(node);
+    }
+
     public final void setHeuristicValue(final String nodeKey, final double heuristicValue) {
         final GraphNode node;
         if (nodeMapping.containsKey(nodeKey) && (node = nodeMapping.get(nodeKey)) != null) {
