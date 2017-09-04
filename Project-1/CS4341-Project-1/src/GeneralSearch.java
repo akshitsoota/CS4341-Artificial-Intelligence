@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class GeneralSearch {
 
@@ -16,8 +14,8 @@ public class GeneralSearch {
     public static List<GraphNode> general_Search(Graph graph, ISearchStrategy searchStrategy) {
         LinkedList<List<GraphNode>> queue = GeneralSearch.makeQueueWithInitialState(graph);
         while (!queue.isEmpty()) {
-            List<GraphNode> front = queue.removeFirst();
             GeneralSearch.printQueueSnapshot(queue, searchStrategy.isInformed());
+            List<GraphNode> front = queue.removeFirst();
             if (GeneralSearch.isSolution(graph, front)) {
                 System.out.println("goal reached!");
                 return front;
@@ -64,7 +62,11 @@ public class GeneralSearch {
      */
     private static List<GraphNode> expand(List<GraphNode> path) {
         GraphNode lastNodeInPath = path.get(0);
-        return new ArrayList<>(lastNodeInPath.getAllOutgoingNodes().keySet());
+
+        final List<GraphNode> paths = new ArrayList<>(lastNodeInPath.getAllOutgoingNodes().keySet());
+        paths.sort(Comparator.comparing(GraphNode::getKey));
+
+        return paths;
     }
 
     /**
@@ -74,25 +76,33 @@ public class GeneralSearch {
      */
     private static void printQueueSnapshot(LinkedList<List<GraphNode>> queue, boolean showHeuristic) {
         if (queue.isEmpty()) {
-            System.out.print("\t\t\t[]");
+            System.out.print("\t\t\t[]\n");
             return;
         }
+
         System.out.print("\t" + queue.get(0).get(0).getKey() + "\t");
         System.out.print("[");
+
         for (List<GraphNode> path : queue) {
             StringBuilder pathBuilder = new StringBuilder();
             String prefix = "";
+
+            if (showHeuristic) {
+                pathBuilder.append(String.format("%.1f", path.get(0).getHeuristicValue()));
+            }
+
             pathBuilder.append("<");
             for (GraphNode node : path) {
                 pathBuilder.append(prefix);
                 prefix = ",";
                 pathBuilder.append(node.getKey());
             }
+
             String pathToPrint = pathBuilder.toString();
-            pathToPrint = pathToPrint.substring(0,pathToPrint.length() - 1);
             pathToPrint = pathToPrint + "> ";
             System.out.print(pathToPrint);
         }
+
         System.out.print("]");
         System.out.println("\t");
     }

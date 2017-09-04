@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Graph {
     private static final boolean IS_GRAPH_UNDIRECTED_BY_DEFAULT = true;
@@ -9,7 +6,7 @@ public class Graph {
     private final Map<String, GraphNode> nodeMapping;
 
     public Graph() {
-        this.nodeMapping = new HashMap<>();
+        this.nodeMapping = new LinkedHashMap<>();
     }
 
     public final void addConnection(final String from, final String to, final double connectionWeight) {
@@ -86,5 +83,15 @@ public class Graph {
 
         final boolean toConnectedWithFromHuh = toNode != null && toNode.isConnectedTo(fromNode);
         return fromConnectedWithToHuh || toConnectedWithFromHuh;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        this.nodeMapping.values().forEach(graphNode -> {
+            builder.append(graphNode).append("\n");
+        });
+
+        return builder.toString();
     }
 }

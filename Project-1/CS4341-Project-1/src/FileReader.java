@@ -39,7 +39,7 @@ public class FileReader {
 				String toNode = graphEdgeComponents[1];
 				double connectionWeight = Double.parseDouble(graphEdgeComponents[2]);
 				
-				System.out.printf("Adding connection from Node %s to Node %s with weight %f\n", fromNode, toNode, connectionWeight);
+//				System.out.printf("Adding connection from Node %s to Node %s with weight %f\n", fromNode, toNode, connectionWeight);
 				
 				graph.addConnection(fromNode, toNode, connectionWeight, true);
 			}
@@ -52,7 +52,7 @@ public class FileReader {
 				String node = graphEdgeComponents[0];
 				double heuristicVal = Double.parseDouble(graphEdgeComponents[1]);
 				
-				System.out.printf("Adding heuristic value to Node %s with value %f\n", node, heuristicVal);
+//				System.out.printf("Adding heuristic value to Node %s with value %f\n", node, heuristicVal);
 				
 				graph.setHeuristicValue(node, heuristicVal);
 			}
