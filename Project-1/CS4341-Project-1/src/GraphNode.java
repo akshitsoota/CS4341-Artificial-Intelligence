@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class GraphNode {
@@ -21,7 +22,7 @@ public class GraphNode {
         this.key = key;
         this.heuristicValue = heuristicValue;
 
-        this.outgoingNodes = new HashMap<>();
+        this.outgoingNodes = new LinkedHashMap<>();
         if (outgoingNodes != null && outgoingNodes.size() != 0) {
             this.outgoingNodes.putAll(outgoingNodes);
         }
