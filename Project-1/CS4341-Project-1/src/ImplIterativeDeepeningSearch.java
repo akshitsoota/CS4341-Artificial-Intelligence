@@ -43,18 +43,15 @@ public class ImplIterativeDeepeningSearch implements ISearchStrategy {
             return queue;
         }
         Collections.reverse(childrenNodes);
-        for (GraphNode child : childrenNodes) {
-            if (currentNodePath.contains(child)) {
-                continue;
-            }
-            List<GraphNode> childNodePath = new ArrayList<>();
-            childNodePath.addAll(currentNodePath);
-            childNodePath.add(0, child);
-            queue.addFirst(childNodePath);
-        }
+        List<List<GraphNode>> childrenPathList = Utilities.addChildrenToPath(currentNodePath, childrenNodes);
+        childrenPathList.forEach((path) -> queue.add(0, path));
         return queue;
     }
 
+    /**
+     * Gets the queue with just initial node for next iteration
+     * @return the queue with initial node
+     */
     private LinkedList<List<GraphNode>> getQueueWithInitialNodeCopy() {
         List<GraphNode> newGraphNodeList = new ArrayList<>();
         newGraphNodeList.addAll(this.queueWithInitialNode.get(0));

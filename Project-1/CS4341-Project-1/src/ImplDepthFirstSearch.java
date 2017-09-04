@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,15 +15,8 @@ public class ImplDepthFirstSearch implements ISearchStrategy {
             return queue;
         }
         Collections.reverse(childrenNodes);
-        for (GraphNode child : childrenNodes) {
-            if (currentNodePath.contains(child)) {
-                continue;
-            }
-            List<GraphNode> childNodePath = new ArrayList<>();
-            childNodePath.addAll(currentNodePath);
-            childNodePath.add(0, child);
-            queue.addFirst(childNodePath);
-        }
+        List<List<GraphNode>> childrenPathList = Utilities.addChildrenToPath(currentNodePath, childrenNodes);
+        childrenPathList.forEach((path) -> queue.add(0, path));
         return queue;
     }
 }

@@ -9,6 +9,16 @@ public interface ISearchStrategy {
      */
     boolean isInformed();
 
+
+    /**
+     * By default, the heuristic value should be printed except for searches like A star
+     * @param path the path to print the information of
+     * @return the value to print
+     */
+    default double valueToPrintWithPath(List<GraphNode> path) {
+        return path.get(0).getHeuristicValue();
+    }
+
     /**
      * adds the childrenNodes by appending it to the currentNodePath in the queue using the strategy defined by
      * the search method <br />
