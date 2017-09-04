@@ -31,7 +31,7 @@ public class GeneralSearch {
      * @param graph the graph to create the queue
      * @return the created queue with the initial state
      */
-    private static LinkedList<List<GraphNode>> makeQueueWithInitialState(Graph graph) {
+    public static LinkedList<List<GraphNode>> makeQueueWithInitialState(Graph graph) {
         GraphNode initialState = graph.getGraphNode(INITIAL_STATE);
         if (initialState == null) {
             System.err.println("Cannot find the Initial State Node");
@@ -104,7 +104,7 @@ public class GeneralSearch {
         }
 
         System.out.print("]");
-        System.out.println("\t");
+        System.out.println("");
     }
 
 }

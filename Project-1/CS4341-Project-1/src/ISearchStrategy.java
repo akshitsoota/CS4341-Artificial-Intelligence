@@ -21,7 +21,7 @@ public interface ISearchStrategy {
      *<br />
      * @param queue - The current queue after extracting out the current node path being explored
      * @param currentNodePath - The ongoing path of the current node being explored including the node itself
-     * @param childrenNodes - Children of the current node
+     * @param childrenNodes - Children of the current node sorted alphabetically
      * @return - The updated queue after adding all the children to the path
      */
     LinkedList<List<GraphNode>> addNodesToQueue(LinkedList<List<GraphNode>> queue,
