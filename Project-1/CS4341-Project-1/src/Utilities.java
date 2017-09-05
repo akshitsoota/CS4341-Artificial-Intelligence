@@ -50,11 +50,11 @@ public class Utilities {
      */
     public static double getPathCost(List<GraphNode> path) {
 
-        double totalPathCost = 0.0;
-
         if (path.size() < 2) {
             return 0.0;
         }
+
+        double totalPathCost = 0.0;
 
         for (int i = 0; i < path.size() - 1; i++) {
             totalPathCost += path.get(i).getAllOutgoingNodes().get(path.get(i + 1));

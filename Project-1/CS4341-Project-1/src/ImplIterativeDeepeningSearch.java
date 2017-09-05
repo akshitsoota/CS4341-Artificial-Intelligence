@@ -18,7 +18,7 @@ public class ImplIterativeDeepeningSearch implements ISearchStrategy {
     static ImplIterativeDeepeningSearch getInstance(LinkedList<List<GraphNode>> queueWithInitialNode) {
         if (queueWithInitialNode == null || queueWithInitialNode.isEmpty()) {
             System.err.print("Error, invalid initial queue for Iterative deepening search");
-            throw new IllegalStateException();
+            throw new IllegalArgumentException();
         }
         return new ImplIterativeDeepeningSearch(queueWithInitialNode);
     }
