@@ -14,7 +14,7 @@ public class GeneralSearch {
     public static List<GraphNode> general_Search(Graph graph, ISearchStrategy searchStrategy) {
         LinkedList<List<GraphNode>> queue = GeneralSearch.makeQueueWithInitialState(graph);
         while (!queue.isEmpty()) {
-            GeneralSearch.printQueueSnapshot(queue, searchStrategy.isInformed());
+            GeneralSearch.printQueueSnapshot(queue, searchStrategy);
             List<GraphNode> front = queue.removeFirst();
             if (GeneralSearch.isSolution(graph, front)) {
                 System.out.println("goal reached!");
@@ -31,7 +31,7 @@ public class GeneralSearch {
      * @param graph the graph to create the queue
      * @return the created queue with the initial state
      */
-    private static LinkedList<List<GraphNode>> makeQueueWithInitialState(Graph graph) {
+    public static LinkedList<List<GraphNode>> makeQueueWithInitialState(Graph graph) {
         GraphNode initialState = graph.getGraphNode(INITIAL_STATE);
         if (initialState == null) {
             System.err.println("Cannot find the Initial State Node");
@@ -72,9 +72,9 @@ public class GeneralSearch {
     /**
      * Prints a snapshot of the queue
      * @param queue the queue to print the snapshot
-     * @param showHeuristic whether to show the heuristics in the snapshot
+     * @param searchStrategy the search strategy used
      */
-    private static void printQueueSnapshot(LinkedList<List<GraphNode>> queue, boolean showHeuristic) {
+    private static void printQueueSnapshot(LinkedList<List<GraphNode>> queue, ISearchStrategy searchStrategy) {
         if (queue.isEmpty()) {
             System.out.print("\t\t\t[]\n");
             return;
@@ -87,8 +87,8 @@ public class GeneralSearch {
             StringBuilder pathBuilder = new StringBuilder();
             String prefix = "";
 
-            if (showHeuristic) {
-                pathBuilder.append(String.format("%.1f", path.get(0).getHeuristicValue()));
+            if (searchStrategy.isInformed()) {
+                pathBuilder.append(String.format("%.1f", searchStrategy.valueToPrintWithPath(path)));
             }
 
             pathBuilder.append("<");
@@ -104,7 +104,7 @@ public class GeneralSearch {
         }
 
         System.out.print("]");
-        System.out.println("\t");
+        System.out.println("");
     }
 
 }
