@@ -23,6 +23,8 @@ public class GeneralSearch {
             List<GraphNode> openedNodes = GeneralSearch.expand(front);
             queue = searchStrategy.addNodesToQueue(queue, front, openedNodes);
         }
+        
+        System.out.println("Failure to find path between S and G");
         return null;
     }
 
