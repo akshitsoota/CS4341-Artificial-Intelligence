@@ -15,6 +15,19 @@ public class Utilities {
 
         return compareValue;
     };
+    
+    public static final Comparator<List<GraphNode>> PATH_BASED_COMPARATOR = (path1, path2) -> {
+        final double cost1 = Utilities.getPathCost(path1);
+        final double cost2 = Utilities.getPathCost(path2);
+
+        final int compareValue = Double.compare(cost1, cost2);
+        if (compareValue == 0) {
+            // If we've a tie, do alphabetical sort
+            return path1.get(0).getKey().compareTo(path2.get(0).getKey());
+        }
+
+        return compareValue;
+    };
 
     private Utilities() {
 
