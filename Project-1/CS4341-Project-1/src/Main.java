@@ -38,6 +38,10 @@ public class Main {
         System.out.println("Hill Climb:");
         GeneralSearch.general_Search(fileGraph, new ImplHillClimb());
         System.out.println("");
+        
+        System.out.println("Hill Climb with Backtracking:");
+        GeneralSearch.general_Search(fileGraph, new ImplHillClimbBacktracking());
+        System.out.println("");
 
         System.out.println("Beam Search (w = DEFAULT = 3):");
         GeneralSearch.general_Search(fileGraph, new ImplBeamSearch());

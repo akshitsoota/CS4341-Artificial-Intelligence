@@ -1,7 +1,7 @@
 import java.util.LinkedList;
 import java.util.List;
 
-public class ImplHillClimb implements ISearchStrategy {
+public class ImplHillClimbBacktracking implements ISearchStrategy {
 
 	@Override
 	public boolean isInformed() {
@@ -17,13 +17,10 @@ public class ImplHillClimb implements ISearchStrategy {
 		List<List<GraphNode>> a = Utilities.addChildrenToPath(currentNodePath, childrenNodes);
 		a.sort(Utilities.HEURISTIC_BASED_COMPARATOR);
 		LinkedList<List<GraphNode>> children = new LinkedList<List<GraphNode>>();
-		if(a.size() == 0) {
-			return queue;
-		} else {
-			children.add(a.get(0));
-			return children;
-		}
-
+		children.addAll(a);
+		children.addAll(queue);
+				
+		return children;
 	}
 
 }
