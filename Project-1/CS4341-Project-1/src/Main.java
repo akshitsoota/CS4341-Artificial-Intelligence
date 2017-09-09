@@ -4,7 +4,7 @@ public class Main {
         final Graph fileGraph = new Graph();
 
         // FIXME: Accept args[0]
-        graphReader.convertFileToGraph(fileGraph, "graph.txt");
+        graphReader.convertFileToGraph(fileGraph, "CS4341-Project-1/BonusProblem.txt");
 
         System.out.println("Depth First Search:");
         GeneralSearch.general_Search(fileGraph, new ImplDepthFirstSearch());
