@@ -1,4 +1,4 @@
-Axshit Soota
+Akshit Soota
 Ankit Kumar
 Daniel Alfred
 
@@ -6,12 +6,11 @@ Compiling the project:
 Our application was compiled by running the following:
 In the src/ folder, run "javac *.java"
 
-
 Running the project:
 To run the project, pass in the name and extension of the graph file to be read in. Our
-project is expecting graph files to be stored in the folder where the source and compiled
-project files are located. Additionally, our application accepts the absolute file path
-wrapped in quotes.
+project is expecting graph files to be stored in the folder where the compiled project files
+are located (src/ if following the above instructions). Additionally, our application accepts
+the absolute file path wrapped in quotes.
 
 Example:
 If the graph file is located in the src/ folder, run "java Main graph.txt"
