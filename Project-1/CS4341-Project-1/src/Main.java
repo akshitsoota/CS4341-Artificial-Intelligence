@@ -1,10 +1,14 @@
 public class Main {
     public static void main(final String[] args) {
+        if (args.length == 0) {
+            System.out.println("One command line argument must be specified indicating which file must be read!");
+            return;
+        }
+
         final FileReader graphReader = new FileReader();
         final Graph fileGraph = new Graph();
 
-        // FIXME: Accept args[0]
-        graphReader.convertFileToGraph(fileGraph, "CS4341-Project-1/BonusProblem.txt");
+        graphReader.convertFileToGraph(fileGraph, args[0]);
 
         System.out.println("Depth First Search:");
         GeneralSearch.general_Search(fileGraph, new ImplDepthFirstSearch());
