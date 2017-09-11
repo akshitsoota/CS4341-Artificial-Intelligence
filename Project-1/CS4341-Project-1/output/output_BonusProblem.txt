@@ -121,7 +121,7 @@ Hill Climb with Backtracking:
 	G	[0.0<G,H,B,S> 400.0<F,B,S> 600.0<I,B,S> ]
 goal reached!
 
-Beam Search (w = DEFAULT = 3):
+Beam Search (w = DEFAULT = 2):
 	S	[100.0<S> ]
 	A	[40.0<A,S> 60.0<C,S> ]
 	C	[60.0<C,S> 180.0<D,A,S> 90.0<E,A,S> ]
