@@ -50,6 +50,7 @@ fabric.properties
 
 ####################################################################################
 .idea/
+*.class
 
 # Idea files
 Project-1/CS4341-Project-1/CS4341-Project-1.iml

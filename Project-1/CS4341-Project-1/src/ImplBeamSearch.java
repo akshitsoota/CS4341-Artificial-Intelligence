@@ -2,7 +2,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ImplBeamSearch implements ISearchStrategy {
-    private static final int DEFAULT_BEAMING_VALUE = 2; // w
+    static final int DEFAULT_BEAMING_VALUE = 2; // w
 
     private final int beamingValue;
 
