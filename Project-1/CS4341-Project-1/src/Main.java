@@ -18,7 +18,7 @@ public class Main {
         GeneralSearch.general_Search(fileGraph, new ImplBreadthFirstSearch());
         System.out.println("");
 
-        System.out.println("Depth Limited Search (depth-limit = DEFAULT = 2):");
+        System.out.println("Depth Limited Search (depth-limit = DEFAULT = " + ImplDepthLimitedSearch.DEFAULT_DEPTH_LIMIT + "):");
         GeneralSearch.general_Search(fileGraph, new ImplDepthLimitedSearch());
         System.out.println("");
 
@@ -30,7 +30,7 @@ public class Main {
         System.out.println("Uniform Search (Branch-and-Bound):");
         GeneralSearch.general_Search(fileGraph, new ImplUniformCostSearch());
         System.out.println("");
-        
+
         System.out.println("Greedy Search:");
         GeneralSearch.general_Search(fileGraph, new ImplGreedySearch());
         System.out.println("");
@@ -38,16 +38,16 @@ public class Main {
         System.out.println("A* Search:");
         GeneralSearch.general_Search(fileGraph, new ImplAStarSearch());
         System.out.println("");
-        
+
         System.out.println("Hill Climb:");
         GeneralSearch.general_Search(fileGraph, new ImplHillClimb());
         System.out.println("");
-        
+
         System.out.println("Hill Climb with Backtracking:");
         GeneralSearch.general_Search(fileGraph, new ImplHillClimbBacktracking());
         System.out.println("");
 
-        System.out.println("Beam Search (w = DEFAULT = 3):");
+        System.out.println("Beam Search (w = DEFAULT = " + ImplBeamSearch.DEFAULT_BEAMING_VALUE + "):");
         GeneralSearch.general_Search(fileGraph, new ImplBeamSearch());
         System.out.println("");
     }

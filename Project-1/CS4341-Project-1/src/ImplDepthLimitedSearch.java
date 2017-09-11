@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ImplDepthLimitedSearch implements ISearchStrategy {
-    private static final int DEFAULT_DEPTH_LIMIT = 2;
+    static final int DEFAULT_DEPTH_LIMIT = 2;
 
     private final int depthLimit;
 
