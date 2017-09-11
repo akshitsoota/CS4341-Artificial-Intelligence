@@ -1,0 +1,131 @@
+Depth First Search:
+	S	[<S> ]
+	A	[<A,S> <B,S> <C,S> ]
+	D	[<D,A,S> <E,A,S> <B,S> <C,S> ]
+	E	[<E,A,S> <B,S> <C,S> ]
+	B	[<B,S> <C,S> ]
+	F	[<F,B,S> <H,B,S> <I,B,S> <C,S> ]
+	H	[<H,B,S> <I,B,S> <C,S> ]
+	G	[<G,H,B,S> <I,B,S> <C,S> ]
+goal reached!
+
+Breadth First Search:
+	S	[<S> ]
+	A	[<A,S> <B,S> <C,S> ]
+	B	[<B,S> <C,S> <D,A,S> <E,A,S> ]
+	C	[<C,S> <D,A,S> <E,A,S> <F,B,S> <H,B,S> <I,B,S> ]
+	D	[<D,A,S> <E,A,S> <F,B,S> <H,B,S> <I,B,S> <J,C,S> <K,C,S> ]
+	E	[<E,A,S> <F,B,S> <H,B,S> <I,B,S> <J,C,S> <K,C,S> ]
+	F	[<F,B,S> <H,B,S> <I,B,S> <J,C,S> <K,C,S> ]
+	H	[<H,B,S> <I,B,S> <J,C,S> <K,C,S> ]
+	I	[<I,B,S> <J,C,S> <K,C,S> <G,H,B,S> ]
+	J	[<J,C,S> <K,C,S> <G,H,B,S> ]
+	K	[<K,C,S> <G,H,B,S> <L,J,C,S> ]
+	G	[<G,H,B,S> <L,J,C,S> ]
+goal reached!
+
+Depth Limited Search (depth-limit = DEFAULT = 2):
+	S	[<S> ]
+	A	[<A,S> <B,S> <C,S> ]
+	D	[<D,A,S> <E,A,S> <B,S> <C,S> ]
+	E	[<E,A,S> <B,S> <C,S> ]
+	B	[<B,S> <C,S> ]
+	F	[<F,B,S> <H,B,S> <I,B,S> <C,S> ]
+	H	[<H,B,S> <I,B,S> <C,S> ]
+	I	[<I,B,S> <C,S> ]
+	C	[<C,S> ]
+	J	[<J,C,S> <K,C,S> ]
+	K	[<K,C,S> ]
+Failure to find path between S and G
+
+Iterative Deepening Search:
+l = 0
+	S	[<S> ]
+
+l = 1
+	S	[<S> ]
+	A	[<A,S> <B,S> <C,S> ]
+	B	[<B,S> <C,S> ]
+	C	[<C,S> ]
+
+l = 2
+	S	[<S> ]
+	A	[<A,S> <B,S> <C,S> ]
+	D	[<D,A,S> <E,A,S> <B,S> <C,S> ]
+	E	[<E,A,S> <B,S> <C,S> ]
+	B	[<B,S> <C,S> ]
+	F	[<F,B,S> <H,B,S> <I,B,S> <C,S> ]
+	H	[<H,B,S> <I,B,S> <C,S> ]
+	I	[<I,B,S> <C,S> ]
+	C	[<C,S> ]
+	J	[<J,C,S> <K,C,S> ]
+	K	[<K,C,S> ]
+
+l = 3
+	S	[<S> ]
+	A	[<A,S> <B,S> <C,S> ]
+	D	[<D,A,S> <E,A,S> <B,S> <C,S> ]
+	E	[<E,A,S> <B,S> <C,S> ]
+	B	[<B,S> <C,S> ]
+	F	[<F,B,S> <H,B,S> <I,B,S> <C,S> ]
+	H	[<H,B,S> <I,B,S> <C,S> ]
+	G	[<G,H,B,S> <I,B,S> <C,S> ]
+goal reached!
+
+Uniform Search (Branch-and-Bound):
+	S	[0.0<S> ]
+	A	[5.0<A,S> 10.0<B,S> 15.0<C,S> ]
+	B	[10.0<B,S> 15.0<C,S> 105.0<D,A,S> 205.0<E,A,S> ]
+	C	[15.0<C,S> 30.0<F,B,S> 40.0<H,B,S> 50.0<I,B,S> 105.0<D,A,S> 205.0<E,A,S> ]
+	F	[30.0<F,B,S> 40.0<H,B,S> 50.0<I,B,S> 105.0<D,A,S> 205.0<E,A,S> 455.0<K,C,S> 815.0<J,C,S> ]
+	H	[40.0<H,B,S> 50.0<I,B,S> 105.0<D,A,S> 205.0<E,A,S> 455.0<K,C,S> 815.0<J,C,S> ]
+	G	[41.0<G,H,B,S> 50.0<I,B,S> 105.0<D,A,S> 205.0<E,A,S> 455.0<K,C,S> 815.0<J,C,S> ]
+goal reached!
+
+Greedy Search:
+	S	[100.0<S> ]
+	A	[40.0<A,S> 60.0<C,S> 100.0<B,S> ]
+	C	[60.0<C,S> 90.0<E,A,S> 100.0<B,S> 180.0<D,A,S> ]
+	E	[90.0<E,A,S> 100.0<B,S> 180.0<D,A,S> 440.0<J,C,S> 800.0<K,C,S> ]
+	B	[100.0<B,S> 180.0<D,A,S> 440.0<J,C,S> 800.0<K,C,S> ]
+	H	[80.0<H,B,S> 180.0<D,A,S> 400.0<F,B,S> 440.0<J,C,S> 600.0<I,B,S> 800.0<K,C,S> ]
+	G	[0.0<G,H,B,S> 180.0<D,A,S> 400.0<F,B,S> 440.0<J,C,S> 600.0<I,B,S> 800.0<K,C,S> ]
+goal reached!
+
+A* Search:
+	S	[100.0<S> ]
+	A	[45.0<A,S> 75.0<C,S> 110.0<B,S> ]
+	C	[75.0<C,S> 110.0<B,S> 285.0<D,A,S> 295.0<E,A,S> ]
+	B	[110.0<B,S> 285.0<D,A,S> 295.0<E,A,S> 1255.0<J,C,S> 1255.0<K,C,S> ]
+	H	[120.0<H,B,S> 285.0<D,A,S> 295.0<E,A,S> 430.0<F,B,S> 650.0<I,B,S> 1255.0<J,C,S> 1255.0<K,C,S> ]
+	G	[41.0<G,H,B,S> 285.0<D,A,S> 295.0<E,A,S> 430.0<F,B,S> 650.0<I,B,S> 1255.0<J,C,S> 1255.0<K,C,S> ]
+goal reached!
+
+Hill Climb:
+	S	[100.0<S> ]
+	A	[40.0<A,S> ]
+	E	[90.0<E,A,S> ]
+Failure to find path between S and G
+
+Hill Climb with Backtracking:
+	S	[100.0<S> ]
+	A	[40.0<A,S> 60.0<C,S> 100.0<B,S> ]
+	E	[90.0<E,A,S> 180.0<D,A,S> 60.0<C,S> 100.0<B,S> ]
+	D	[180.0<D,A,S> 60.0<C,S> 100.0<B,S> ]
+	C	[60.0<C,S> 100.0<B,S> ]
+	J	[440.0<J,C,S> 800.0<K,C,S> 100.0<B,S> ]
+	L	[0.0<L,J,C,S> 800.0<K,C,S> 100.0<B,S> ]
+	K	[800.0<K,C,S> 100.0<B,S> ]
+	B	[100.0<B,S> ]
+	H	[80.0<H,B,S> 400.0<F,B,S> 600.0<I,B,S> ]
+	G	[0.0<G,H,B,S> 400.0<F,B,S> 600.0<I,B,S> ]
+goal reached!
+
+Beam Search (w = DEFAULT = 3):
+	S	[100.0<S> ]
+	A	[40.0<A,S> 60.0<C,S> ]
+	C	[60.0<C,S> 180.0<D,A,S> 90.0<E,A,S> ]
+	D	[180.0<D,A,S> 90.0<E,A,S> ]
+	E	[90.0<E,A,S> ]
+Failure to find path between S and G
+
