@@ -1,5 +1,4 @@
 #!env python
-# Source: https://github.com/samogden/WPI.CS4341/blob/master/gomoku/referee.py
 
 import logging
 import sys
@@ -41,7 +40,7 @@ class GomokuBoard(object):
         self.width = width
         self.height = height
         self._field = [[self._SingleField() for y in range(height)]
-                                            for x in range(width)]
+                       for x in range(width)]
 
         self.init_field() #originally used to init minefield, but not really useful here...
 
@@ -93,9 +92,9 @@ class Game(object):
     def isMoveOnBoard(self, move):
         logging.debug("in x: %s" % ( 0 <= move.x and move.x < self.board.width ))
         logging.debug("on board: %s" % (((move.x >= 0) and (move.x < self.board.width))
-                    and ((move.y >= 0) and (move.y < self.board.height))))
+                                        and ((move.y >= 0) and (move.y < self.board.height))))
         return (((move.x >= 0) and (move.x < self.board.width))
-                    and ((move.y >= 0) and (move.y < self.board.height)))
+                and ((move.y >= 0) and (move.y < self.board.height)))
 
     def isValidMove(self, move):
         if (self.turn == 1):
@@ -134,7 +133,7 @@ class Game(object):
                     if y_fits_on_board:
                         y_set = list(set([board[x][y + delta] for delta in range(self.length_to_win)]))
                     else:
-                        x_set = [None]
+                        y_set = [None]
 
                     if diagf_fits_on_board:
                         diagf_set = list(set([board[x + delta][y + delta] for delta in range(self.length_to_win)]))
@@ -284,6 +283,9 @@ def play_gomoku(team1, team2):
     teams = [team1, team2]
     random.shuffle(teams)
 
+    def opponentOf(team):
+        return teams[ (teams.index(team) - 1) % len(teams) ]
+
     game = Game(board_width, board_height, length_to_win)
 
     playing_game = True
@@ -298,7 +300,7 @@ def play_gomoku(team1, team2):
         logging.debug("Played in time: %s" % played_in_time)
         if not played_in_time:
             logging.error("Out of time!")
-            win_team = teams[ (game.turn + (teams.index(up_to_play)-1)) % len(teams) ]
+            win_team = opponentOf(up_to_play)
             lose_team = up_to_play
             logging.info("%s loses!" % (win_team,))
             logging.info("%s wins!" % (lose_team,))
@@ -313,7 +315,7 @@ def play_gomoku(team1, team2):
 
             if move.team_name != up_to_play:
                 logging.error("Wait your turn!")
-                win_team = teams[ (game.turn + (teams.index(up_to_play)-1)) % len(teams) ]
+                win_team = opponentOf(up_to_play)
                 lose_team = up_to_play
                 logging.info("%s loses!" % (win_team,))
                 logging.info("%s wins!" % (lose_team,))
@@ -321,7 +323,7 @@ def play_gomoku(team1, team2):
                 playing_game = False
             elif not game.isValidMove(move):
                 logging.error("Invalid move!")
-                win_team = teams[ (game.turn + (teams.index(up_to_play)-1)) % len(teams) ]
+                win_team = opponentOf(up_to_play)
                 lose_team = up_to_play
                 logging.info("%s loses!" % (win_team,))
                 logging.info("%s wins!" % (lose_team,))
@@ -334,7 +336,7 @@ def play_gomoku(team1, team2):
                     #logging.info("%s loses!" % teams[ (game.turn + (teams.index(up_to_play)-1)) % len(teams) ])
                     #move_msg = "WIN : %s in a row!" % (game.length_to_win)
                     win_team = up_to_play
-                    lose_team =teams[ (game.turn + (teams.index(up_to_play)-1)) % len(teams) ]
+                    lose_team = opponentOf(up_to_play)
                     logging.info("%s loses!" % (win_team,))
                     logging.info("%s wins!" % (lose_team,))
                     move_msg = "END: %s WINS!  %s LOSES!  %s in a row!" % (win_team, lose_team, game.length_to_win)
@@ -349,9 +351,8 @@ def play_gomoku(team1, team2):
             move_msg = "" #"KEEP GOING!"
 
         move_file_mod_info = writeMoveFile(move, move_msg, move_file_name)
+        time.sleep(1)
 
-        pass
-        #playing_game = False
         logging.info("")
     writeEndFile(move_msg)
     for team in teams:
