@@ -9,8 +9,8 @@ public class Game {
     public static final int ROW_NUMBERS = 15;
     public static final int COL_NUMBERS = 15;
 
-    private SquareState MY_COLOR = SquareState.BLACK;
-    private SquareState OPPONENT_COLOR = SquareState.WHITE;
+    private SquareState MY_COLOR = SquareState.WHITE;
+    private SquareState OPPONENT_COLOR = SquareState.BLACK;
 
     private SquareState[][] board;
     private int moveNumber;
@@ -28,6 +28,8 @@ public class Game {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+    	Pair<Integer, Integer> playedMove = Utilities.letterNumberPairToColRow(new Pair<String,Integer>("c",5));
+    	this.board[playedMove.first][playedMove.second] = MY_COLOR;
         return new Pair<>("c", 5);
     }
 

@@ -36,7 +36,7 @@ public class Evaluator {
 			
 			// Finally, return these values with a factor for weighting
 			//return (15*ourFours) + (5*ourThrees) - (15*enemyFours) - (5*enemyThrees);
-			return (int)Math.random()*10;
+			return (int)Math.random()*1000;
 		}
 	}
 	
