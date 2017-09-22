@@ -9,8 +9,8 @@ public class Game {
     public static final int ROW_NUMBERS = 15;
     public static final int COL_NUMBERS = 15;
 
-    private SquareState MY_COLOR = SquareState.WHITE;
-    private SquareState OPPONENT_COLOR = SquareState.BLACK;
+    private SquareState MY_COLOR = SquareState.BLACK;
+    private SquareState OPPONENT_COLOR = SquareState.WHITE;
 
     private SquareState[][] board;
     private int moveNumber;
@@ -22,7 +22,13 @@ public class Game {
 
     public Pair<String, Integer> playFirstMove() {
         // TODO: Fill this out
-        return new Pair<>("A", 1);
+    	try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return new Pair<>("a", 1);
     }
 
     public Pair<String, Integer> playWithOpponentMove(final Pair<String, Integer> movePlayed) {
@@ -44,9 +50,11 @@ public class Game {
 
         while (true) {
 
-            if (depth >= 8) {
+            if (depth >= 2) {
                 break;
             }
+            System.out.println("beginning depth " + depth);
+            
             int maxI = Integer.MIN_VALUE;
             int maxJ = Integer.MIN_VALUE;
             int currentMax = Integer.MIN_VALUE;

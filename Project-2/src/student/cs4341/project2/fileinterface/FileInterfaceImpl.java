@@ -8,7 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class FileInterfaceImpl implements FileInterface {
-    private static final String GROUP_NAME = "groupName"; // TODO: Come up with a creative name
+    private static final String GROUP_NAME = "fdsa"; // TODO: Come up with a creative name
 
     private static final String FILE_MOVE = "move_file";
     private static final String FILE_GROUP_NAME = GROUP_NAME + ".go";
@@ -45,7 +45,10 @@ public class FileInterfaceImpl implements FileInterface {
             if (splitted.length != 3) {
                 playedMoved = game.playFirstMove();
             } else {
-                playedMoved = game.playWithOpponentMove(new Pair<>(splitted[1], Integer.valueOf(splitted[2])));
+            	for(int i = 0; i < splitted.length; i++) {
+            		System.out.println(splitted[i]);
+            	}
+                playedMoved = game.playWithOpponentMove(new Pair<>(splitted[1], Integer.valueOf(splitted[2].replaceAll("\r\n", ""))));
             }
 
             // Write this move into the move file
