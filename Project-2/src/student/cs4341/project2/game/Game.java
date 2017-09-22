@@ -28,7 +28,7 @@ public class Game {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        return new Pair<>("a", 1);
+        return new Pair<>("c", 5);
     }
 
     public Pair<String, Integer> playWithOpponentMove(final Pair<String, Integer> movePlayed) {
@@ -66,11 +66,13 @@ public class Game {
                 for (int j = 0; j < currentState[0].length; j++) {
                     if (currentState[i][j] == SquareState.PINK) {
                         currentState[i][j] = MY_COLOR;
-                        int currentStateValue = iterativeDeepeningMove(currentState, depth, OPPONENT_COLOR, alpha, beta);
-                        if (currentStateValue > currentMax) {
-                            currentMax = currentStateValue;
-                            maxI = i;
-                            maxJ = j;
+                        if(Evaluator.isStateWorthExpanding(currentState, i, j)) {
+                        	int currentStateValue = iterativeDeepeningMove(currentState, depth, OPPONENT_COLOR, alpha, beta);
+                            if (currentStateValue > currentMax) {
+                                currentMax = currentStateValue;
+                                maxI = i;
+                                maxJ = j;
+                            }
                         }
                         currentState[i][j] = SquareState.PINK;
                     }
@@ -84,6 +86,7 @@ public class Game {
         }
 
         this.moveNumber++;
+        this.board[bestMoveSoFarI][bestMoveSoFarJ] = MY_COLOR;
         return Utilities.colRowToLetterNumberPair(bestMoveSoFarI, bestMoveSoFarJ);
     }
 
@@ -140,14 +143,6 @@ public class Game {
     	return OPPONENT_COLOR;
     }
     
-    public void setMyColor(SquareState color) {
-    	MY_COLOR = color;
-    }
-    
-    public void setEnemyColor(SquareState color) {
-    	OPPONENT_COLOR = color;
-    }
-
     public static Game newInstance() {
 
         Game game = new Game();

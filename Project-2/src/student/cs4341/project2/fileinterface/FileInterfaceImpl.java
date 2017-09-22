@@ -74,6 +74,7 @@ public class FileInterfaceImpl implements FileInterface {
             return null;
         }
 
+        System.out.println("Initialized game for " + GROUP_NAME);
         return new FileInterfaceImpl(pathTransformer);
     }
 }

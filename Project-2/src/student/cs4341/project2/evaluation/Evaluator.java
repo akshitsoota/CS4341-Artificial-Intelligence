@@ -55,6 +55,23 @@ public class Evaluator {
 		}
 	}
 	
+	public static boolean isStateWorthExpanding(SquareState[][] currentState, int row, int col) {
+		SquareState myColor = currentState[row][col];
+		return (withinBounds(row+1,col+1) && currentState[row+1][col+1] == myColor) ||
+				(withinBounds(row+1,col) && currentState[row+1][col] == myColor) ||
+				(withinBounds(row+1,col-1) && currentState[row+1][col-1] == myColor) ||
+				(withinBounds(row,col+1) && currentState[row][col+1] == myColor) ||
+				(withinBounds(row,col) && currentState[row][col] == myColor) ||
+				(withinBounds(row,col-1) && currentState[row][col-1] == myColor) ||
+				(withinBounds(row-1,col+1) && currentState[row-1][col+1] == myColor) ||
+				(withinBounds(row-1,col) && currentState[row-1][col] == myColor) ||
+				(withinBounds(row-1,col-1) && currentState[row-1][col-1] == myColor);
+	}
+	
+	private static boolean withinBounds(int row, int col) {
+		return (row >= 0 && col >= 0 && row < Game.ROW_NUMBERS && col < Game.COL_NUMBERS);
+	}
+	
 	public static int countInARow(SquareState[][] currentState, SquareState color, int row, int length) {
 		// Iterate through all columns in this row to determine number of contiguous stones of length X (overlapping)
 		int frequency = 0;
