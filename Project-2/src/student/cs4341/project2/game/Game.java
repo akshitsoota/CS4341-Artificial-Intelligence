@@ -2,14 +2,15 @@ package student.cs4341.project2.game;
 
 import student.cs4341.project2.Pair;
 import student.cs4341.project2.Utilities;
+import student.cs4341.project2.evaluation.Evaluator;
 
 public class Game {
 
-    private static final int ROW_NUMBERS = 15;
-    private static final int COL_NUMBERS = 15;
+    public static final int ROW_NUMBERS = 15;
+    public static final int COL_NUMBERS = 15;
 
-    private static final SquareState MY_COLOR = SquareState.WHITE;
-    private static final SquareState OPPONENT_COLOR = SquareState.BLACK;
+    private SquareState MY_COLOR = SquareState.WHITE;
+    private SquareState OPPONENT_COLOR = SquareState.BLACK;
 
     private SquareState[][] board;
     private int moveNumber;
@@ -28,7 +29,7 @@ public class Game {
 
         Pair<Integer, Integer> playedMove = Utilities.letterNumberPairToColRow(movePlayed);
 
-        this.board[playedMove.first][playedMove.second] = Game.OPPONENT_COLOR;
+        this.board[playedMove.first][playedMove.second] = OPPONENT_COLOR;
 
         int depth = 1;
 
@@ -80,8 +81,7 @@ public class Game {
 
     private int iterativeDeepeningMove(SquareState[][] board, int depth, SquareState turn, int alpha, int beta) {
         if (depth == 0) {
-            // Call eval/utility function
-            return 1;
+            return Evaluator.evaluateMove(board, MY_COLOR, OPPONENT_COLOR);
         }
 
         // MAX function
@@ -123,6 +123,22 @@ public class Game {
         return min;
 
     }
+    
+    public SquareState getMyColor() {
+    	return MY_COLOR;
+    }
+    
+    public SquareState getEnemyColor() {
+    	return OPPONENT_COLOR;
+    }
+    
+    public void setMyColor(SquareState color) {
+    	MY_COLOR = color;
+    }
+    
+    public void setEnemyColor(SquareState color) {
+    	OPPONENT_COLOR = color;
+    }
 
     public static Game newInstance() {
 
@@ -132,7 +148,7 @@ public class Game {
                 game.board[i][j] = SquareState.PINK;
             }
         }
-        return new Game();
+        return game;
     }
 
     private static SquareState[][] copySquareStateArray(SquareState[][] board) {
