@@ -6,7 +6,12 @@ public final class Utilities {
     }
 
     public static <T> Function<T, T> identityMapper() {
-        return (T original) -> original;
+        return new Function<T, T>() {
+            @Override
+            public T apply(T input) {
+                return input;
+            }
+        };
     }
 
     public static Pair<String, Integer> colRowToLetterNumberPair(final int columnNumber, final int rowNumber) {
