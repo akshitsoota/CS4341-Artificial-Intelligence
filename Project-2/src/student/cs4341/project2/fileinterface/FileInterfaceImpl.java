@@ -50,7 +50,7 @@ public class FileInterfaceImpl implements FileInterface {
             	for(int i = 0; i < splitted.length; i++) {
             		System.out.println(splitted[i]);
             	}
-                playedMoved = game.playWithOpponentMove(new Pair<>(splitted[1], Integer.valueOf(splitted[2].replaceAll("\r\n", ""))));
+                playedMoved = game.playWithOpponentMove(new Pair<>(splitted[1], Integer.valueOf(splitted[2].replaceAll("\r\n", "").replaceAll("\n", ""))));
             }
 
             // Write this move into the move file

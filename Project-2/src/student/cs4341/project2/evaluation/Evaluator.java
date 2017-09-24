@@ -36,7 +36,7 @@ public class Evaluator {
 			
 			// Finally, return these values with a factor for weighting
 			//return (15*ourFours) + (5*ourThrees) - (15*enemyFours) - (5*enemyThrees);
-			return (int)Math.random()*1000;
+			return ((int) (Math.random()*1000));
 		}
 	}
 	
@@ -56,16 +56,14 @@ public class Evaluator {
 	}
 	
 	public static boolean isStateWorthExpanding(SquareState[][] currentState, int row, int col) {
-		SquareState myColor = currentState[row][col];
-		return (withinBounds(row+1,col+1) && currentState[row+1][col+1] == myColor) ||
-				(withinBounds(row+1,col) && currentState[row+1][col] == myColor) ||
-				(withinBounds(row+1,col-1) && currentState[row+1][col-1] == myColor) ||
-				(withinBounds(row,col+1) && currentState[row][col+1] == myColor) ||
-				(withinBounds(row,col) && currentState[row][col] == myColor) ||
-				(withinBounds(row,col-1) && currentState[row][col-1] == myColor) ||
-				(withinBounds(row-1,col+1) && currentState[row-1][col+1] == myColor) ||
-				(withinBounds(row-1,col) && currentState[row-1][col] == myColor) ||
-				(withinBounds(row-1,col-1) && currentState[row-1][col-1] == myColor);
+		return (withinBounds(row+1,col+1) && currentState[row+1][col+1] != SquareState.PINK) ||
+				(withinBounds(row+1,col) && currentState[row+1][col] != SquareState.PINK) ||
+				(withinBounds(row+1,col-1) && currentState[row+1][col-1] != SquareState.PINK) ||
+				(withinBounds(row,col+1) && currentState[row][col+1] != SquareState.PINK) ||
+				(withinBounds(row,col-1) && currentState[row][col-1] != SquareState.PINK) ||
+				(withinBounds(row-1,col+1) && currentState[row-1][col+1] != SquareState.PINK) ||
+				(withinBounds(row-1,col) && currentState[row-1][col] != SquareState.PINK) ||
+				(withinBounds(row-1,col-1) && currentState[row-1][col-1] != SquareState.PINK);
 	}
 	
 	private static boolean withinBounds(int row, int col) {

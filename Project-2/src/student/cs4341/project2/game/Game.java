@@ -69,12 +69,15 @@ public class Game {
                     if (currentState[i][j] == SquareState.PINK) {
                         currentState[i][j] = MY_COLOR;
                         if(Evaluator.isStateWorthExpanding(currentState, i, j)) {
+                        	//System.out.println(i + "," + j + " is worth expanding");
                         	int currentStateValue = iterativeDeepeningMove(currentState, depth, OPPONENT_COLOR, alpha, beta);
                             if (currentStateValue > currentMax) {
                                 currentMax = currentStateValue;
                                 maxI = i;
                                 maxJ = j;
                             }
+                        } else {
+                        	System.out.println(i + "," + j + " is not worth expanding");
                         }
                         currentState[i][j] = SquareState.PINK;
                     }
