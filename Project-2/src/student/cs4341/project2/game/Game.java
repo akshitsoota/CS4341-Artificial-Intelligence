@@ -2,14 +2,15 @@ package student.cs4341.project2.game;
 
 import student.cs4341.project2.Pair;
 import student.cs4341.project2.Utilities;
+import student.cs4341.project2.evaluation.Evaluator;
 
 public class Game {
 
-    private static final int ROW_NUMBERS = 15;
-    private static final int COL_NUMBERS = 15;
+    public static final int ROW_NUMBERS = 15;
+    public static final int COL_NUMBERS = 15;
 
-    private static final SquareState MY_COLOR = SquareState.WHITE;
-    private static final SquareState OPPONENT_COLOR = SquareState.BLACK;
+    private SquareState MY_COLOR = SquareState.WHITE;
+    private SquareState OPPONENT_COLOR = SquareState.BLACK;
 
     private SquareState[][] board;
     private int moveNumber;
@@ -21,14 +22,22 @@ public class Game {
 
     public Pair<String, Integer> playFirstMove() {
         // TODO: Fill this out
-        return new Pair<>("A", 1);
+    	try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	Pair<Integer, Integer> playedMove = Utilities.letterNumberPairToColRow(new Pair<String,Integer>("c",5));
+    	this.board[playedMove.first][playedMove.second] = MY_COLOR;
+        return new Pair<>("c", 5);
     }
 
     public Pair<String, Integer> playWithOpponentMove(final Pair<String, Integer> movePlayed) {
 
         Pair<Integer, Integer> playedMove = Utilities.letterNumberPairToColRow(movePlayed);
 
-        this.board[playedMove.first][playedMove.second] = Game.OPPONENT_COLOR;
+        this.board[playedMove.first][playedMove.second] = OPPONENT_COLOR;
 
         int depth = 1;
 
@@ -43,9 +52,11 @@ public class Game {
 
         while (true) {
 
-            if (depth >= 8) {
+            if (depth >= 2) {
                 break;
             }
+            System.out.println("beginning depth " + depth);
+            
             int maxI = Integer.MIN_VALUE;
             int maxJ = Integer.MIN_VALUE;
             int currentMax = Integer.MIN_VALUE;
@@ -57,11 +68,13 @@ public class Game {
                 for (int j = 0; j < currentState[0].length; j++) {
                     if (currentState[i][j] == SquareState.PINK) {
                         currentState[i][j] = MY_COLOR;
-                        int currentStateValue = iterativeDeepeningMove(currentState, depth, OPPONENT_COLOR, alpha, beta);
-                        if (currentStateValue > currentMax) {
-                            currentMax = currentStateValue;
-                            maxI = i;
-                            maxJ = j;
+                        if(Evaluator.isStateWorthExpanding(currentState, i, j)) {
+                        	int currentStateValue = iterativeDeepeningMove(currentState, depth, OPPONENT_COLOR, alpha, beta);
+                            if (currentStateValue > currentMax) {
+                                currentMax = currentStateValue;
+                                maxI = i;
+                                maxJ = j;
+                            }
                         }
                         currentState[i][j] = SquareState.PINK;
                     }
@@ -75,13 +88,13 @@ public class Game {
         }
 
         this.moveNumber++;
+        this.board[bestMoveSoFarI][bestMoveSoFarJ] = MY_COLOR;
         return Utilities.colRowToLetterNumberPair(bestMoveSoFarI, bestMoveSoFarJ);
     }
 
     private int iterativeDeepeningMove(SquareState[][] board, int depth, SquareState turn, int alpha, int beta) {
         if (depth == 0) {
-            // Call eval/utility function
-            return 1;
+            return Evaluator.evaluateMove(board, MY_COLOR, OPPONENT_COLOR);
         }
 
         // MAX function
@@ -123,7 +136,15 @@ public class Game {
         return min;
 
     }
-
+    
+    public SquareState getMyColor() {
+    	return MY_COLOR;
+    }
+    
+    public SquareState getEnemyColor() {
+    	return OPPONENT_COLOR;
+    }
+    
     public static Game newInstance() {
 
         Game game = new Game();
@@ -132,7 +153,7 @@ public class Game {
                 game.board[i][j] = SquareState.PINK;
             }
         }
-        return new Game();
+        return game;
     }
 
     private static SquareState[][] copySquareStateArray(SquareState[][] board) {

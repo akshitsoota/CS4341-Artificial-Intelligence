@@ -10,10 +10,10 @@ public final class Utilities {
     }
 
     public static Pair<String, Integer> colRowToLetterNumberPair(final int columnNumber, final int rowNumber) {
-        return new Pair<>(String.valueOf('A' + columnNumber), rowNumber + 1);
+        return new Pair<>(String.valueOf( (char) ('a' + columnNumber)), rowNumber + 1);
     }
 
     public static Pair<Integer, Integer> letterNumberPairToColRow(final Pair<String, Integer> pair) {
-        return new Pair<>(Character.getNumericValue(pair.first.charAt(0)) - Character.getNumericValue('A'), pair.second - 1);
+        return new Pair<>(Character.getNumericValue(pair.first.charAt(0)) - Character.getNumericValue('a'), pair.second - 1);
     }
 }

@@ -8,13 +8,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class FileInterfaceImpl implements FileInterface {
-    private static final String GROUP_NAME = "groupName"; // TODO: Come up with a creative name
+    private static final String GROUP_NAME = "asdf"; // TODO: Come up with a creative name
 
     private static final String FILE_MOVE = "move_file";
     private static final String FILE_GROUP_NAME = GROUP_NAME + ".go";
     private static final String FILE_END_GAME = "end_game";
 
-    private static final int REFEREE_POLL_PERIOD = 120; // ms
+    //private static final int REFEREE_POLL_PERIOD = 120; // ms
+    private static final int REFEREE_POLL_PERIOD = 250;
 
     private final Function<String, String> pathTransformer;
 
@@ -45,7 +46,11 @@ public class FileInterfaceImpl implements FileInterface {
             if (splitted.length != 3) {
                 playedMoved = game.playFirstMove();
             } else {
-                playedMoved = game.playWithOpponentMove(new Pair<>(splitted[1], Integer.valueOf(splitted[2])));
+            	System.out.println(GROUP_NAME + " read in:");
+            	for(int i = 0; i < splitted.length; i++) {
+            		System.out.println(splitted[i]);
+            	}
+                playedMoved = game.playWithOpponentMove(new Pair<>(splitted[1], Integer.valueOf(splitted[2].replaceAll("\r\n", ""))));
             }
 
             // Write this move into the move file
@@ -55,6 +60,7 @@ public class FileInterfaceImpl implements FileInterface {
                     .append(playedMoved.second)
                     .toString();
 
+            System.out.println(GROUP_NAME + " wrote:" + newMoveString);
             FileUtilities.writeToFile(moveFilePath, newMoveString);
 
             // Sleep so that the referee picks up the move
@@ -71,6 +77,7 @@ public class FileInterfaceImpl implements FileInterface {
             return null;
         }
 
+        System.out.println("Initialized game for " + GROUP_NAME);
         return new FileInterfaceImpl(pathTransformer);
     }
 }
