@@ -4,10 +4,13 @@ import student.cs4341.project2.Pair;
 import student.cs4341.project2.Utilities;
 import student.cs4341.project2.evaluation.Evaluator;
 
-public class Game {
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
+public class Game {
     public static final int ROW_NUMBERS = 15;
     public static final int COL_NUMBERS = 15;
+    private static final int EVALUATION_SLEEP = 8000; // ms
 
     private SquareState MY_COLOR = SquareState.WHITE;
     private SquareState OPPONENT_COLOR = SquareState.BLACK;
@@ -34,12 +37,9 @@ public class Game {
     }
 
     public Pair<String, Integer> playWithOpponentMove(final Pair<String, Integer> movePlayed) {
-
-        Pair<Integer, Integer> playedMove = Utilities.letterNumberPairToColRow(movePlayed);
+        final Pair<Integer, Integer> playedMove = Utilities.letterNumberPairToColRow(movePlayed);
 
         this.board[playedMove.first][playedMove.second] = OPPONENT_COLOR;
-
-        int depth = 1;
 
         // TODO: remove this as there's a better way
         SquareState[][] currentState = Game.copySquareStateArray(this.board);
@@ -47,52 +47,84 @@ public class Game {
         int bestMoveSoFarI = Integer.MIN_VALUE;
         int bestMoveSoFarJ = Integer.MIN_VALUE;
 
-        // TODO: think about if we want to compare
-        int bestMoveMax = Integer.MIN_VALUE;
+        // Spawn game playing thread
+        ScheduledExecutorService threading = Executors.newSingleThreadScheduledExecutor();
+        PlayRunnable player = new PlayRunnable(currentState, bestMoveSoFarI, bestMoveSoFarJ);
 
-        while (true) {
+        threading.execute(player);
 
-            if (depth >= 2) {
-                break;
-            }
-            System.out.println("beginning depth " + depth);
-            
-            int maxI = Integer.MIN_VALUE;
-            int maxJ = Integer.MIN_VALUE;
-            int currentMax = Integer.MIN_VALUE;
-
-            int alpha = Integer.MIN_VALUE;
-            int beta = Integer.MAX_VALUE;
-
-            for (int i = 0; i < currentState.length; i++) {
-                for (int j = 0; j < currentState[0].length; j++) {
-                    if (currentState[i][j] == SquareState.PINK) {
-                        currentState[i][j] = MY_COLOR;
-                        if(Evaluator.isStateWorthExpanding(currentState, i, j)) {
-                        	//System.out.println(i + "," + j + " is worth expanding");
-                        	int currentStateValue = iterativeDeepeningMove(currentState, depth, OPPONENT_COLOR, alpha, beta);
-                            if (currentStateValue > currentMax) {
-                                currentMax = currentStateValue;
-                                maxI = i;
-                                maxJ = j;
-                            }
-                        } else {
-                        	System.out.println(i + "," + j + " is not worth expanding");
-                        }
-                        currentState[i][j] = SquareState.PINK;
-                    }
-                }
-            }
-
-            bestMoveSoFarI = maxI;
-            bestMoveSoFarJ = maxJ;
-            depth++;
-
+        // Give the thread it's own sweet time
+        try {
+            Thread.sleep(Game.EVALUATION_SLEEP);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
+        threading.shutdownNow();
+
+        // Fetch latest state from the thread
+        bestMoveSoFarI = player.bestMoveSoFarI;
+        bestMoveSoFarJ = player.bestMoveSoFarJ;
+
+        // Perform the best move found so far!
         this.moveNumber++;
         this.board[bestMoveSoFarI][bestMoveSoFarJ] = MY_COLOR;
         return Utilities.colRowToLetterNumberPair(bestMoveSoFarI, bestMoveSoFarJ);
+    }
+
+    private class PlayRunnable implements Runnable {
+        private final SquareState[][] currentState;
+        int bestMoveSoFarI;
+        int bestMoveSoFarJ;
+
+        PlayRunnable(final SquareState[][] currentState, final int bestMoveSoFarI, final int bestMoveSoFarJ) {
+            this.currentState = currentState;
+            this.bestMoveSoFarI = bestMoveSoFarI;
+            this.bestMoveSoFarJ = bestMoveSoFarJ;
+        }
+
+        @Override
+        public void run() {
+            int depth = 1;
+
+            // TODO: think about if we want to compare
+            int bestMoveMax = Integer.MIN_VALUE;
+
+            while (!Thread.currentThread().isInterrupted()) {
+                System.out.println("beginning depth " + depth);
+
+                int maxI = Integer.MIN_VALUE;
+                int maxJ = Integer.MIN_VALUE;
+                int currentMax = Integer.MIN_VALUE;
+
+                int alpha = Integer.MIN_VALUE;
+                int beta = Integer.MAX_VALUE;
+
+                for (int i = 0; i < currentState.length; i++) {
+                    for (int j = 0; j < currentState[0].length; j++) {
+                        if (currentState[i][j] == SquareState.PINK) {
+                            currentState[i][j] = MY_COLOR;
+                            if(Evaluator.isStateWorthExpanding(currentState, i, j)) {
+                                //System.out.println(i + "," + j + " is worth expanding");
+                                int currentStateValue = iterativeDeepeningMove(currentState, depth, OPPONENT_COLOR, alpha, beta);
+                                if (currentStateValue > currentMax) {
+                                    currentMax = currentStateValue;
+                                    maxI = i;
+                                    maxJ = j;
+                                }
+                            } else {
+                                System.out.println(i + "," + j + " is not worth expanding");
+                            }
+                            currentState[i][j] = SquareState.PINK;
+                        }
+                    }
+                }
+
+                bestMoveSoFarI = maxI;
+                bestMoveSoFarJ = maxJ;
+                depth++;
+            }
+        }
     }
 
     private int iterativeDeepeningMove(SquareState[][] board, int depth, SquareState turn, int alpha, int beta) {
@@ -136,8 +168,8 @@ public class Game {
                 }
             }
         }
-        return min;
 
+        return min;
     }
     
     public SquareState getMyColor() {
