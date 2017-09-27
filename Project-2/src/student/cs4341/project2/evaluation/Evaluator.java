@@ -96,7 +96,7 @@ public class Evaluator {
 		}
 		
 		// System.out.println("Our twos = " + ourTwos + "..EnemyTwos =" + enemyTwos);
-		return ((173*ourFours) + (53*ourThrees) + (7*ourTwos) - (167*enemyFours) - (47*enemyThrees) - (5*enemyTwos));
+		return ((263*ourFours) + (37*ourThrees) + (3*ourTwos) - (257*enemyFours) - (31*enemyThrees) - (2*enemyTwos));
 	}
 	
 	/**
@@ -104,7 +104,7 @@ public class Evaluator {
 	 * @param currentState The hypothetical board state
 	 * @param myColor Our stone color
 	 * @param enemyColor Enemy stone color
-	 * @return Returns 1000 if the board is terminal (we win), -1000 if board is terminal (opponent wins), or
+	 * @return Returns 10000 if the board is terminal (we win), -10000 if board is terminal (opponent wins), or
 	 * 0 if not terminal
 	 */
 	public static int isTerminal(SquareState[][] currentState, SquareState myColor, SquareState enemyColor) {
