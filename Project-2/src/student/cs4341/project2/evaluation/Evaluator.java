@@ -18,41 +18,36 @@ public class Evaluator {
 	 */
 	public static int evaluateMove(SquareState[][] currentState, SquareState myColor, SquareState enemyColor) {
 		// Check if provided move is terminal (for us or enemy)
-		int isTerminal = isTerminal(currentState, myColor, enemyColor);
-		if(isTerminal != 0) {		
-			return isTerminal;
-		} else {
-			// If not, initialize vars to count number of 3 in-a-rows and 4 in-a-rows for
-			// us and enemy in currentState for evaluation
-			/*
-			int enemyFours = 0;		
-			int ourFours = 0;
-			int enemyThrees = 0;
-			int ourThrees = 0;
-			
-			// In every column, go through all rows and count number of 3s and 4s (includes overlap)
-			for(int i = 0; i < Game.COL_NUMBERS; i++) {
-				enemyFours += countInACol(currentState, enemyColor, i, 4);
-				ourFours += countInACol(currentState, myColor, i, 4);
-				enemyThrees += countInACol(currentState, enemyColor, i, 3);
-				ourThrees += countInACol(currentState, myColor, i, 3);
-			}
-			
-			// In every row, go through all columns and count number of 3s and 4s (includes overlap)
-			for(int i = 0; i < Game.ROW_NUMBERS; i++) {
-				enemyFours += countInARow(currentState, enemyColor, i, 4);
-				ourFours += countInARow(currentState, myColor, i, 4);
-				enemyThrees += countInARow(currentState, enemyColor, i, 3);
-				ourThrees += countInARow(currentState, myColor, i, 3);	
-			}
-			
-			// Here, we would go through all possible diagonals, but this part has not been implemented yet
-			
-			// Finally, return these values with a factor for weighting
-			return (15*ourFours) + (5*ourThrees) - (15*enemyFours) - (5*enemyThrees);
-			 */
-			return ((int) (Math.random()*1000));
+		// If not, initialize vars to count number of 3 in-a-rows and 4 in-a-rows for
+		// us and enemy in currentState for evaluation
+		/*
+		int enemyFours = 0;
+		int ourFours = 0;
+		int enemyThrees = 0;
+		int ourThrees = 0;
+
+		// In every column, go through all rows and count number of 3s and 4s (includes overlap)
+		for(int i = 0; i < Game.COL_NUMBERS; i++) {
+			enemyFours += countInACol(currentState, enemyColor, i, 4);
+			ourFours += countInACol(currentState, myColor, i, 4);
+			enemyThrees += countInACol(currentState, enemyColor, i, 3);
+			ourThrees += countInACol(currentState, myColor, i, 3);
 		}
+
+		// In every row, go through all columns and count number of 3s and 4s (includes overlap)
+		for(int i = 0; i < Game.ROW_NUMBERS; i++) {
+			enemyFours += countInARow(currentState, enemyColor, i, 4);
+			ourFours += countInARow(currentState, myColor, i, 4);
+			enemyThrees += countInARow(currentState, enemyColor, i, 3);
+			ourThrees += countInARow(currentState, myColor, i, 3);
+		}
+
+		// Here, we would go through all possible diagonals, but this part has not been implemented yet
+
+		// Finally, return these values with a factor for weighting
+		return (15*ourFours) + (5*ourThrees) - (15*enemyFours) - (5*enemyThrees);
+		 */
+		return ((int) (Math.random()*1000));
 	}
 	
 	/**
