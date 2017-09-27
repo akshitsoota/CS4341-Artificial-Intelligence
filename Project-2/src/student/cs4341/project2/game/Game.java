@@ -108,6 +108,7 @@ public class Game {
                                     maxI = i;
                                     maxJ = j;
                                 }
+                                System.out.println("Value for row " + i + " and col " + j +" is " + currentStateValue );
                             } else {
                                 System.out.println(i + "," + j + " is not worth expanding");
                             }
