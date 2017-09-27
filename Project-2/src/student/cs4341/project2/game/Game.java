@@ -57,8 +57,9 @@ public class Game {
         }
 
         // Fetch latest state from the thread
-        bestMoveSoFarI = player.bestMoveSoFarI;
-        bestMoveSoFarJ = player.bestMoveSoFarJ;
+        Pair<Integer, Integer> bestMoveSoFar = player.bestMoveSoFar;
+        bestMoveSoFarI = bestMoveSoFar.first;
+        bestMoveSoFarJ = bestMoveSoFar.second;
 
         // Shutdown after we've pulled out our values
         threading.shutdownNow();
@@ -71,13 +72,11 @@ public class Game {
 
     private class PlayRunnable implements Runnable {
         private final SquareState[][] currentState;
-        int bestMoveSoFarI;
-        int bestMoveSoFarJ;
+        Pair<Integer, Integer> bestMoveSoFar;
 
         PlayRunnable(final SquareState[][] currentState, final int bestMoveSoFarI, final int bestMoveSoFarJ) {
             this.currentState = currentState;
-            this.bestMoveSoFarI = bestMoveSoFarI;
-            this.bestMoveSoFarJ = bestMoveSoFarJ;
+            this.bestMoveSoFar = new Pair<>(bestMoveSoFarI, bestMoveSoFarJ);
         }
 
         @Override
@@ -121,8 +120,7 @@ public class Game {
                     }
                 }
 
-                bestMoveSoFarI = maxI;
-                bestMoveSoFarJ = maxJ;
+                this.bestMoveSoFar = new Pair<>(maxI, maxJ);
                 depth++;
             }
         }
