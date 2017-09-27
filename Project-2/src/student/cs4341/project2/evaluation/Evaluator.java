@@ -175,6 +175,7 @@ public class Evaluator {
 			
 			// If there are at least 5 in a row in a given column, the board is terminal- return
 			if(maxInRow >= 5) {
+				System.out.println("5 in a row found for " + color + " in row " + i);
 				return 5;
 			}
 			
@@ -190,6 +191,7 @@ public class Evaluator {
 			
 			// If there are at least 5 in a row in a given row, the board is terminal- return
 			if(maxInCol >= 5) {
+				System.out.println("5 in a row found for " + color + " in col " + i);
 				return 5;
 			}
 			
@@ -197,11 +199,75 @@ public class Evaluator {
 			if(maxInCol > maxInARow) {
 				maxInARow = maxInCol;
 			}
-		}		
+		}
 		
+		// And the same from diagonals from NorthWest to SouthEast
+		for(int i = (Game.ROW_NUMBERS - 6); i >= 0; i--) {
+			int maxInNWSE = getMaxDiagNWSE(currentState, i, 0, color);
+			
+			// If there are at least 5 in a row in a given row, the board is terminal- return
+			if(maxInNWSE >= 5) {
+				System.out.println("5 in a row found for " + color + " in NWSE diagonal " + i + ",0");
+				return 5;
+			}
+			
+			// Otherwise, update our maximum
+			if(maxInNWSE > maxInARow) {
+				maxInARow = maxInNWSE;
+			}
+		}
+		
+		// No need to double check diag at 0,0- start at 1
+		for(int i = 1; i < (Game.COL_NUMBERS - 6); i++) {
+			int maxInNWSE = getMaxDiagNWSE(currentState, 0, i, color);
+			
+			// If there are at least 5 in a row in a given row, the board is terminal- return
+			if(maxInNWSE >= 5) {
+				System.out.println("5 in a row found for " + color + " in NWSE diagonal 0," + i);
+				return 5;
+			}
+			
+			// Otherwise, update our maximum
+			if(maxInNWSE > maxInARow) {
+				maxInARow = maxInNWSE;
+			}
+		}
+		
+		
+		// And the same from diagonals from SouthWest to NorthEast
+		for(int i = (Game.ROW_NUMBERS - 6); i >= 0; i--) {
+			int maxInSWNE = getMaxDiagSWNE(currentState, i, Game.COL_NUMBERS - 1, color);
+			
+			// If there are at least 5 in a row in a given row, the board is terminal- return
+			if(maxInSWNE >= 5) {
+				System.out.println("5 in a row found for " + color + " in SWNE diagonal " + i + "," + (Game.COL_NUMBERS - 1));
+				return 5;
+			}
+			
+			// Otherwise, update our maximum
+			if(maxInSWNE > maxInARow) {
+				maxInARow = maxInSWNE;
+			}
+		}
+		
+		for(int i = (Game.COL_NUMBERS - 6); i >= 0 ; i--) {
+			int maxInSWNE = getMaxDiagSWNE(currentState, 0, i, color);
+			
+			// If there are at least 5 in a row in a given row, the board is terminal- return
+			if(maxInSWNE >= 5) {
+				System.out.println("5 in a row found for " + color + " in SWNE diagonal 0," + i);
+				return 5;
+			}
+			
+			// Otherwise, update our maximum
+			if(maxInSWNE > maxInARow) {
+				maxInARow = maxInSWNE;
+			}
+		}
+
 		return maxInARow;
 	}
-	
+
 	/**
 	 * Iterates through the columns in the given row, looking for the longest contiguous in-a-row of stones
 	 * @param currentState The current board state
@@ -212,15 +278,22 @@ public class Evaluator {
 	private static int getMaxRow(SquareState[][] currentState, int row, SquareState color) {
 		int longestRow = 0;
 		int currentRow = 0;
+		//boolean gapAccountedFor = false;
 		for(int i = 0; i < Game.COL_NUMBERS; i++) {
 			if(currentState[row][i] == color) {
 				currentRow++;
 			} else {
-				// If our contiguous row is broken, update the maximum if needed and reset our counter to 0
-				if(longestRow < currentRow) {
-					longestRow = currentRow;
-				}
-				currentRow = 0;
+				//if(!gapAccountedFor && currentState[row][i] == SquareState.PINK) {
+				//	currentRow++;
+				//	gapAccountedFor = true;
+				//} else {
+					// If our contiguous row is broken, update the maximum if needed and reset our counter to 0
+					if(longestRow < currentRow) {
+						longestRow = currentRow;
+					}
+				//	gapAccountedFor = false;
+					currentRow = 0;
+				//}				
 			}
 		}
 		return longestRow;
@@ -236,17 +309,71 @@ public class Evaluator {
 	private static int getMaxCol(SquareState[][] currentState, int col, SquareState color) {
 		int longestCol = 0;
 		int currentCol = 0;
+		//boolean gapAccountedFor = false;
 		for(int i = 0; i < Game.ROW_NUMBERS; i++) {
 			if(currentState[i][col] == color) {
 				currentCol++;
 			} else {
-				// If our contiguous row is broken, update the maximum if needed and reset our counter to 0
-				if(longestCol < currentCol) {
-					longestCol = currentCol;
-				}
-				currentCol = 0;
+				//if(!gapAccountedFor && currentState[i][col] == SquareState.PINK) {
+				//	currentCol++;
+				//	gapAccountedFor = true;
+				//} else {
+					// If our contiguous row is broken, update the maximum if needed and reset our counter to 0
+					if(longestCol < currentCol) {
+						longestCol = currentCol;
+					}
+				//	gapAccountedFor = false;
+					currentCol = 0;
+				//}
 			}
 		}
 		return longestCol;
 	}
+	
+	private static int getMaxDiagNWSE(SquareState[][] currentState, int row, int col, SquareState color) {
+		int longestDiag = 0;
+		int currentDiag = 0;
+		//boolean gapAccountedFor = false;
+		for(int i = row, j = col; i < Game.ROW_NUMBERS && j < Game.COL_NUMBERS; i++, j++) {
+			if(currentState[i][j] == color) {
+				currentDiag++;
+			} else {
+				//if(!gapAccountedFor && currentState[i][j] == SquareState.PINK) {
+				//	currentDiag++;
+				//	gapAccountedFor = true;
+				//} else {
+					if(longestDiag < currentDiag) {
+						longestDiag = currentDiag;
+					}
+				//	gapAccountedFor = false;
+					currentDiag = 0;
+				//}
+			}
+		}
+		return longestDiag;
+	}
+	
+	private static int getMaxDiagSWNE(SquareState[][] currentState, int row, int col, SquareState color) {
+		int longestDiag = 0;
+		int currentDiag = 0;
+		//boolean gapAccountedFor = false;
+		for(int i = row, j = col; i >= 0 && j >= 0; i--, j--) {
+			if(currentState[i][j] == color) {
+				currentDiag++;
+			} else {
+				//if(!gapAccountedFor && currentState[i][j] == SquareState.PINK) {
+				//	currentDiag++;
+				//	gapAccountedFor = true;
+				//} else {
+					if(longestDiag < currentDiag) {
+						longestDiag = currentDiag;
+					}
+				//	gapAccountedFor = false;
+					currentDiag = 0;
+				//}
+			}
+		}
+		return longestDiag;
+	}
+	
 }

@@ -77,7 +77,7 @@ public class Game {
                                 maxJ = j;
                             }
                         } else {
-                        	System.out.println(i + "," + j + " is not worth expanding");
+                        	//System.out.println(i + "," + j + " is not worth expanding");
                         }
                         currentState[i][j] = SquareState.PINK;
                     }
