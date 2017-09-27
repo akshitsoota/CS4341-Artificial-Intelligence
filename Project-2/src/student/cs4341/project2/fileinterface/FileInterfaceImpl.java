@@ -8,7 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class FileInterfaceImpl implements FileInterface {
-    private static final String GROUP_NAME = "asdf"; // TODO: Come up with a creative name
+    private static final String GROUP_NAME = "team1"; // TODO: Come up with a creative name
 
     private static final String FILE_MOVE = "move_file";
     private static final String FILE_GROUP_NAME = GROUP_NAME + ".go";
@@ -50,6 +50,7 @@ public class FileInterfaceImpl implements FileInterface {
             	for(int i = 0; i < splitted.length; i++) {
             		System.out.println(splitted[i]);
             	}
+
                 playedMoved = game.playWithOpponentMove(new Pair<>(splitted[1], Integer.valueOf(splitted[2].replaceAll("\r\n", "").replaceAll("\n", ""))));
             }
 
