@@ -128,6 +128,13 @@ public class Game {
     }
 
     private int iterativeDeepeningMove(SquareState[][] board, int depth, SquareState turn, int alpha, int beta) {
+
+        int terminalValue = Evaluator.isTerminal(board, MY_COLOR, OPPONENT_COLOR);
+
+        if (terminalValue != 0) {
+            return terminalValue;
+        }
+
         if (depth == 0) {
             return Evaluator.evaluateMove(board, MY_COLOR, OPPONENT_COLOR);
         }
