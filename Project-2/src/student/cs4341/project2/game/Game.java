@@ -56,11 +56,12 @@ public class Game {
             e.printStackTrace();
         }
 
-        threading.shutdownNow();
-
         // Fetch latest state from the thread
         bestMoveSoFarI = player.bestMoveSoFarI;
         bestMoveSoFarJ = player.bestMoveSoFarJ;
+
+        // Shutdown after we've pulled out our values
+        threading.shutdownNow();
 
         // Perform the best move found so far!
         this.moveNumber++;
