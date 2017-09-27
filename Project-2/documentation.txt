@@ -1,4 +1,5 @@
 Group members: Ankit Kumar, Akshit Soota, Dan Alfred
+Team Name:
 
 How to compile:
 To compile our program, first navigate into src/student/cs4341/project2. Then, run the following command:
@@ -19,7 +20,12 @@ Our program utilizes a simple utility function to indicate wins or losses when e
 value the evaluation function could return, indicating a terminal state with certainty.
 
 Evaluation function:
-
+To evaluate non-terminal states of the board, we have implemented an algorithm that considers the state of each
+player in the game. Our evaluation function loops through the board and counts, for the given move, how many
+N in-a-row it and the enemy have. We factor in 4 and 3 in-a-row, and assign coefficients for each. The enemy's
+coefficients are negative to indicate that an improvement in this state is worse for the player. However, the
+magnitude of our coefficients lead the AI to play offensively, valuing 4 in-a-rows of our own before blocking
+potential enemy 3 in-a-rows from becoming 4 in-a-rows. 
 
 Expansion heuristics:
 We implemented heuristics to keep the minimax algorithm from expanding every possible state. Our heuristics
@@ -35,3 +41,6 @@ submit it to the referee.
 
 Results:
 To test our program, we launched two instances with different group names and had them play against each other.
+We observed our AI blocking enemy 3 in-a-rows and attempting to create its own. Additionally, we used a modified
+referee which printed to board to confirm what moves were being made, and compared the moves made by each other
+to the moves that we would have made ourselves.
