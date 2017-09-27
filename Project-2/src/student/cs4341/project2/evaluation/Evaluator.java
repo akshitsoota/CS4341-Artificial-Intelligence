@@ -83,8 +83,8 @@ public class Evaluator {
 		// Here, we would go through all possible diagonals, but this part has not been implemented yet
 
 		// Finally, return these values with a factor for weighting
-		System.out.println("Evaluate Function value: " + String.valueOf((15*ourFours) + (5*ourThrees) - (15*enemyFours) - (5*enemyThrees)));
-		return -1 * ((15*ourFours) + (5*ourThrees) - (15*enemyFours) - (5*enemyThrees));
+		//System.out.println("Evaluate Function value: " + String.valueOf((15*ourFours) + (5*ourThrees) - (15*enemyFours) - (5*enemyThrees)));
+		return ((17*ourFours) + (11*ourThrees) - (13*enemyFours) - (7*enemyThrees));
 
 //		return ((int) (Math.random()*1000));
 	}

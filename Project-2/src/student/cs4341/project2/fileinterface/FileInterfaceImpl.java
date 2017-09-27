@@ -8,7 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class FileInterfaceImpl implements FileInterface {
-    private static final String GROUP_NAME = "team1"; // TODO: Come up with a creative name
+    private static final String GROUP_NAME = "team2"; // TODO: Come up with a creative name
 
     private static final String FILE_MOVE = "move_file";
     private static final String FILE_GROUP_NAME = GROUP_NAME + ".go";
