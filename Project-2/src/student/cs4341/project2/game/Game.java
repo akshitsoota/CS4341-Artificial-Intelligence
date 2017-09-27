@@ -10,7 +10,7 @@ import java.util.concurrent.ScheduledExecutorService;
 public class Game {
     public static final int ROW_NUMBERS = 15;
     public static final int COL_NUMBERS = 15;
-    private static final int EVALUATION_SLEEP = 4000; // ms
+    private static final int EVALUATION_SLEEP = 8000; // ms
 
     private SquareState MY_COLOR = SquareState.WHITE;
     private SquareState OPPONENT_COLOR = SquareState.BLACK;
