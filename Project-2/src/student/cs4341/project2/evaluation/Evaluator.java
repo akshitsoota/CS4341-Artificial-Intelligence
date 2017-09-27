@@ -52,27 +52,33 @@ public class Evaluator {
 		int ourFours = 0;
 		int enemyThrees = 0;
 		int ourThrees = 0;
+		int enemyTwos = 0;
+		int ourTwos = 0;
 
 		// In every column, go through all rows and count number of 3s and 4s (includes overlap)
 		for(int i = 0; i < Game.COL_NUMBERS; i++) {
 			// FL1C, FL2C, SL1C, SL2C
-			int[] values = countInACol(currentState, myColor, enemyColor, i, 4, 3);
+			int[] values = countInACol(currentState, myColor, enemyColor, i, 4, 3, 2);
 
-			enemyFours += values[2];
+			enemyFours += values[3];
 			ourFours += values[0];
-			enemyThrees += values[3];
+			enemyThrees += values[4];
 			ourThrees += values[1];
+			enemyTwos += values[5];
+			ourTwos += values[2];
 		}
 
 		// In every row, go through all columns and count number of 3s and 4s (includes overlap)
 		for(int i = 0; i < Game.ROW_NUMBERS; i++) {
 			// FL1C, FL2C, SL1C, SL2C
-			int[] values = countInARow(currentState, myColor, enemyColor, i, 4, 3);
+			int[] values = countInARow(currentState, myColor, enemyColor, i, 4, 3, 2);
 
-			enemyFours += values[2];
+			enemyFours += values[3];
 			ourFours += values[0];
-			enemyThrees += values[3];
+			enemyThrees += values[4];
 			ourThrees += values[1];
+			enemyTwos += values[5];
+			ourTwos += values[2];
 
 //			enemyFours += countInARow(currentState, enemyColor, i, 4);
 //			ourFours += countInARow(currentState, myColor, i, 4);
@@ -84,7 +90,8 @@ public class Evaluator {
 
 		// Finally, return these values with a factor for weighting
 		//System.out.println("Evaluate Function value: " + String.valueOf((15*ourFours) + (5*ourThrees) - (15*enemyFours) - (5*enemyThrees)));
-		return ((17*ourFours) + (11*ourThrees) - (13*enemyFours) - (7*enemyThrees));
+		System.out.println("Our twos = " + ourTwos + "..EnemyTwos =" + enemyTwos);
+		return ((17*ourFours) + (11*ourThrees) + (5*ourTwos) - (13*enemyFours) - (7*enemyThrees) - (2*enemyTwos));
 
 //		return ((int) (Math.random()*1000));
 	}
@@ -167,9 +174,10 @@ public class Evaluator {
 //		return frequency;
 //	}
 
-	public static int[] countInARow(SquareState[][] currentState, SquareState first, SquareState second, int row, int length1, int length2) {
-		int firstRT = 0; int firstL1Counter = 0; int firstL2Counter = 0;
-		int secondRT = 0; int secondL1Counter = 0; int secondL2Counter = 0;
+	public static int[] countInARow(SquareState[][] currentState, SquareState first, SquareState second, int row, int length1, int length2, int length3) {
+		int firstRT = 0; int firstL1Counter = 0; int firstL2Counter = 0; int firstL3Counter = 0;
+		int secondRT = 0; int secondL1Counter = 0; int secondL2Counter = 0; int secondL3Counter = 0;
+
 
 		for (int i = 0; i < Game.COL_NUMBERS; i++) {
 			final SquareState thisPosition = currentState[row][i];
@@ -184,6 +192,10 @@ public class Evaluator {
 					firstL2Counter++;
 				}
 
+				if (firstRT >= length3) {
+					firstL3Counter++;
+				}
+
 				firstRT++;
 			} else if (thisPosition == second) {
 				firstRT = 0;
@@ -196,11 +208,15 @@ public class Evaluator {
 					secondL2Counter++;
 				}
 
+				if (secondRT >= length3) {
+					secondL3Counter++;
+				}
+
 				secondRT++;
 			}
 		}
 
-		return new int[]{firstL1Counter, firstL2Counter, secondL1Counter, secondL2Counter};
+		return new int[]{firstL1Counter, firstL2Counter, firstL3Counter, secondL1Counter, secondL2Counter, secondL3Counter};
 	}
 
 //	public static int countInACol(SquareState[][] currentState, SquareState color, int col, int length) {
@@ -259,9 +275,9 @@ public class Evaluator {
 //		return returnValues;
 //	}
 
-	public static int[] countInACol(SquareState[][] currentState, SquareState first, SquareState second, int col, int length1, int length2) {
-		int firstRT = 0; int firstL1Counter = 0; int firstL2Counter = 0;
-		int secondRT = 0; int secondL1Counter = 0; int secondL2Counter = 0;
+	public static int[] countInACol(SquareState[][] currentState, SquareState first, SquareState second, int col, int length1, int length2, int length3) {
+		int firstRT = 0; int firstL1Counter = 0; int firstL2Counter = 0; int firstL3Counter = 0;
+		int secondRT = 0; int secondL1Counter = 0; int secondL2Counter = 0; int secondL3Counter = 0;
 
 		for (int i = 0; i < Game.ROW_NUMBERS; i++) {
 			final SquareState thisPosition = currentState[i][col];
@@ -276,6 +292,10 @@ public class Evaluator {
 					firstL2Counter++;
 				}
 
+				if (firstRT >= length3) {
+					firstL3Counter++;
+				}
+
 				firstRT++;
 			} else if (thisPosition == second) {
 				firstRT = 0;
@@ -288,11 +308,15 @@ public class Evaluator {
 					secondL2Counter++;
 				}
 
+				if (secondRT >= length3) {
+					secondL3Counter++;
+				}
+
 				secondRT++;
 			}
 		}
 
-		return new int[]{firstL1Counter, firstL2Counter, secondL1Counter, secondL2Counter};
+		return new int[]{firstL1Counter, firstL2Counter, firstL3Counter, secondL1Counter, secondL2Counter, secondL3Counter};
 	}
 	
 	/**
