@@ -63,7 +63,7 @@ public class Evaluator {
 	 * @return Returns 1000 if the board is terminal (we win), -1000 if board is terminal (opponent wins), or
 	 * 0 if not terminal
 	 */
-	private static int isTerminal(SquareState[][] currentState, SquareState myColor, SquareState enemyColor) {
+	public static int isTerminal(SquareState[][] currentState, SquareState myColor, SquareState enemyColor) {
 		// First check if either we or enemy have 5 in a row in this state (terminal)
 		int usMaxInRow = getInALine(currentState, myColor);
 		int enemyMaxInRow = getInALine(currentState, enemyColor);
