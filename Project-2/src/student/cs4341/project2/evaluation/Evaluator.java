@@ -47,7 +47,46 @@ public class Evaluator {
 		// Finally, return these values with a factor for weighting
 		return (15*ourFours) + (5*ourThrees) - (15*enemyFours) - (5*enemyThrees);
 		 */
-		return ((int) (Math.random()*1000));
+
+		int enemyFours = 0;
+		int ourFours = 0;
+		int enemyThrees = 0;
+		int ourThrees = 0;
+
+		// In every column, go through all rows and count number of 3s and 4s (includes overlap)
+		for(int i = 0; i < Game.COL_NUMBERS; i++) {
+			// FL1C, FL2C, SL1C, SL2C
+			int[] values = countInACol(currentState, myColor, enemyColor, i, 4, 3);
+
+			enemyFours += values[2];
+			ourFours += values[0];
+			enemyThrees += values[3];
+			ourThrees += values[1];
+		}
+
+		// In every row, go through all columns and count number of 3s and 4s (includes overlap)
+		for(int i = 0; i < Game.ROW_NUMBERS; i++) {
+			// FL1C, FL2C, SL1C, SL2C
+			int[] values = countInARow(currentState, myColor, enemyColor, i, 4, 3);
+
+			enemyFours += values[2];
+			ourFours += values[0];
+			enemyThrees += values[3];
+			ourThrees += values[1];
+
+//			enemyFours += countInARow(currentState, enemyColor, i, 4);
+//			ourFours += countInARow(currentState, myColor, i, 4);
+//			enemyThrees += countInARow(currentState, enemyColor, i, 3);
+//			ourThrees += countInARow(currentState, myColor, i, 3);
+		}
+
+		// Here, we would go through all possible diagonals, but this part has not been implemented yet
+
+		// Finally, return these values with a factor for weighting
+		System.out.println("Evaluate Function value: " + String.valueOf((15*ourFours) + (5*ourThrees) - (15*enemyFours) - (5*enemyThrees)));
+		return -1 * ((15*ourFours) + (5*ourThrees) - (15*enemyFours) - (5*enemyThrees));
+
+//		return ((int) (Math.random()*1000));
 	}
 	
 	/**
@@ -100,59 +139,160 @@ public class Evaluator {
 		return (row >= 0 && col >= 0 && row < Game.ROW_NUMBERS && col < Game.COL_NUMBERS);
 	}
 	
-	/**
-	 * Counts the number of X in-a-rows that can be generated in a given row. This function does not yet account for
-	 * holes in play, such as XX_XX, which can lead to a terminal state
-	 * @param currentState The hypothetical board state
-	 * @param color The color to count in-a-row of
-	 * @param row The row of the board to check
-	 * @param length Represents X in the description- how many stones in a row are we looking for?
-	 * @return The number of X in-a-rows from this row
-	 */
-	public static int countInARow(SquareState[][] currentState, SquareState color, int row, int length) {
-		// Iterate through all columns in this row to determine number of contiguous stones of length X (overlapping)
-		int frequency = 0;
-		int runningTotal = 0;
-		for(int i = 0; i < Game.COL_NUMBERS; i++) {
-			if(currentState[row][i] == color) {
-				if(runningTotal >= length) {
-					frequency++;
-				} else {
-					runningTotal++;
+//	/**
+//	 * Counts the number of X in-a-rows that can be generated in a given row. This function does not yet account for
+//	 * holes in play, such as XX_XX, which can lead to a terminal state
+//	 * @param currentState The hypothetical board state
+//	 * @param color The color to count in-a-row of
+//	 * @param row The row of the board to check
+//	 * @param length Represents X in the description- how many stones in a row are we looking for?
+//	 * @return The number of X in-a-rows from this row
+//	 */
+//	public static int countInARow(SquareState[][] currentState, SquareState color, int row, int length) {
+//		// Iterate through all columns in this row to determine number of contiguous stones of length X (overlapping)
+//		int frequency = 0;
+//		int runningTotal = 0;
+//		for(int i = 0; i < Game.COL_NUMBERS; i++) {
+//			if(currentState[row][i] == color) {
+//				if(runningTotal >= length) {
+//					frequency++;
+//				} else {
+//					runningTotal++;
+//				}
+//			} else {
+//				runningTotal = 0;
+//			}
+//		}
+//
+//		return frequency;
+//	}
+
+	public static int[] countInARow(SquareState[][] currentState, SquareState first, SquareState second, int row, int length1, int length2) {
+		int firstRT = 0; int firstL1Counter = 0; int firstL2Counter = 0;
+		int secondRT = 0; int secondL1Counter = 0; int secondL2Counter = 0;
+
+		for (int i = 0; i < Game.COL_NUMBERS; i++) {
+			final SquareState thisPosition = currentState[row][i];
+			if (thisPosition == first) {
+				secondRT = 0;
+
+				if (firstRT >= length1) {
+					firstL1Counter++;
 				}
-			} else {
-				runningTotal = 0;
+
+				if (firstRT >= length2) {
+					firstL2Counter++;
+				}
+
+				firstRT++;
+			} else if (thisPosition == second) {
+				firstRT = 0;
+
+				if (secondRT >= length1) {
+					secondL1Counter++;
+				}
+
+				if (secondRT >= length2) {
+					secondL2Counter++;
+				}
+
+				secondRT++;
 			}
 		}
-		
-		return frequency;
+
+		return new int[]{firstL1Counter, firstL2Counter, secondL1Counter, secondL2Counter};
 	}
-	
-	/**
-	 * See countInARow(). This function has a similar premise, but counts with columns instead
-	 * @param currentState The hypothetical board state
-	 * @param color The color to count in-a-row of
-	 * @param col The column of the board to check
-	 * @param length How many stones in-a-row we are looking for
-	 * @return How many possible in-a-rows exist in this column
-	 */
-	public static int countInACol(SquareState[][] currentState, SquareState color, int col, int length) {
-		// Iterate through all rows in this column to determine number of contiguous stones of length X (overlapping)
-		int frequency = 0;
-		int runningTotal = 0;
-		for(int i = 0; i < Game.ROW_NUMBERS; i++) {
-			if(currentState[i][col] == color) {
-				if(runningTotal >= length) {
-					frequency++;
-				} else {
-					runningTotal++;
+
+//	public static int countInACol(SquareState[][] currentState, SquareState color, int col, int length) {
+//		// Iterate through all rows in this column to determine number of contiguous stones of length X (overlapping)
+//		int frequency = 0;
+//		int runningTotal = 0;
+//		for(int i = 0; i < Game.ROW_NUMBERS; i++) {
+//			if(currentState[i][col] == color) {
+//				if(runningTotal >= length) {
+//					frequency++;
+//				} else {
+//					runningTotal++;
+//				}
+//			} else {
+//				runningTotal = 0;
+//			}
+//		}
+//
+//		return frequency;
+//	}
+//
+//	/**
+//	 * See countInARow(). This function has a similar premise, but counts with columns instead
+//	 * @param currentState The hypothetical board state
+//	 * @param first The first color to count in-a-row of
+//	 * @param second The second color to count in-a-row of
+//	 * @param col The column of the board to check
+//	 * @param length How many stones in-a-row we are looking for
+//	 * @return How many possible in-a-rows exist in this column
+//	 */
+//	public static int[] countInACol(SquareState[][] currentState, SquareState first, SquareState second, int col, int length) {
+//		// first running total; first freq; second rt; second freq
+//		int returnValues[] = new int[]{0, 0, 0, 0};
+//
+//		for (int i = 0; i < Game.ROW_NUMBERS; i++) {
+//			final SquareState thisPosition = currentState[i][col];
+//			if (thisPosition == first) {
+//				returnValues[2] = 0;
+//
+//				if (returnValues[0] >= length) {
+//					returnValues[1]++;
+//				} else {
+//					returnValues[0]++;
+//				}
+//			} else if (thisPosition == second) {
+//				returnValues[0] = 0;
+//
+//				if (returnValues[2] >= length) {
+//					returnValues[3]++;
+//				} else {
+//					returnValues[2]++;
+//				}
+//			}
+//		}
+//
+//		return returnValues;
+//	}
+
+	public static int[] countInACol(SquareState[][] currentState, SquareState first, SquareState second, int col, int length1, int length2) {
+		int firstRT = 0; int firstL1Counter = 0; int firstL2Counter = 0;
+		int secondRT = 0; int secondL1Counter = 0; int secondL2Counter = 0;
+
+		for (int i = 0; i < Game.ROW_NUMBERS; i++) {
+			final SquareState thisPosition = currentState[i][col];
+			if (thisPosition == first) {
+				secondRT = 0;
+
+				if (firstRT >= length1) {
+					firstL1Counter++;
 				}
-			} else {
-				runningTotal = 0;
+
+				if (firstRT >= length2) {
+					firstL2Counter++;
+				}
+
+				firstRT++;
+			} else if (thisPosition == second) {
+				firstRT = 0;
+
+				if (secondRT >= length1) {
+					secondL1Counter++;
+				}
+
+				if (secondRT >= length2) {
+					secondL2Counter++;
+				}
+
+				secondRT++;
 			}
 		}
-		
-		return frequency;
+
+		return new int[]{firstL1Counter, firstL2Counter, secondL1Counter, secondL2Counter};
 	}
 	
 	/**

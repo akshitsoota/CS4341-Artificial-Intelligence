@@ -89,6 +89,7 @@ public class Game {
 
             while (!Thread.currentThread().isInterrupted()) {
                 System.out.println("beginning depth " + depth);
+                if (depth >= 2) break;
 
                 int maxI = Integer.MIN_VALUE;
                 int maxJ = Integer.MIN_VALUE;
