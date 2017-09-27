@@ -24,16 +24,12 @@ public class Game {
     }
 
     public Pair<String, Integer> playFirstMove() {
-        // TODO: Fill this out
-    	try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	Pair<Integer, Integer> playedMove = Utilities.letterNumberPairToColRow(new Pair<String,Integer>("c",5));
-    	this.board[playedMove.first][playedMove.second] = MY_COLOR;
-        return new Pair<>("c", 5);
+    	final Pair<String, Integer> playedMove = new Pair<>("h", 8);
+
+        final Pair<Integer, Integer> boardMovePlayed = Utilities.letterNumberPairToColRow(playedMove);
+    	this.board[boardMovePlayed.first][boardMovePlayed.second] = MY_COLOR;
+
+        return playedMove;
     }
 
     public Pair<String, Integer> playWithOpponentMove(final Pair<String, Integer> movePlayed) {
@@ -128,8 +124,11 @@ public class Game {
     }
 
     private int iterativeDeepeningMove(SquareState[][] board, int depth, SquareState turn, int alpha, int beta) {
+        if (Thread.currentThread().isInterrupted()) {
+            return Integer.MIN_VALUE;
+        }
 
-        int terminalValue = Evaluator.isTerminal(board, MY_COLOR, OPPONENT_COLOR);
+        final int terminalValue = Evaluator.isTerminal(board, MY_COLOR, OPPONENT_COLOR);
 
         if (terminalValue != 0) {
             return terminalValue;
