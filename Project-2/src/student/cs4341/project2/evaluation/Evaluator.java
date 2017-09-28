@@ -49,8 +49,8 @@ public class Evaluator {
 			enemyTwos += values[5];
 			ourTwos += values[2];
 		}
-		System.out.println("Our twos = " + ourTwos + "..EnemyTwos =" + enemyTwos);
-		return ((17*ourFours) + (11*ourThrees) + (5*ourTwos) - (13*enemyFours) - (7*enemyThrees) - (2*enemyTwos));
+
+		return ((263*ourFours) + (37*ourThrees) + (3*ourTwos) - (257*enemyFours) - (31*enemyThrees) - (2*enemyTwos));
 	}
 	
 	/**
@@ -124,38 +124,49 @@ public class Evaluator {
 		for (int i = 0; i < Game.COL_NUMBERS; i++) {
 			final SquareState thisPosition = currentState[row][i];
 			if (thisPosition == first) {
-				secondRT = 0; // We found the first color at [row][i], so break the running total of the second color
-
-				// The following "if"s increment the counter for number of possible N in-a-rows we can have so far
-				if (firstRT >= length1) {
-					firstL1Counter++;
-				}
-
-				if (firstRT >= length2) {
-					firstL2Counter++;
-				}
-
-				if (firstRT >= length3) {
-					firstL3Counter++;
-				}
-
+				secondRT = 0;
 				firstRT++;
+
+				if (firstRT == length1) {
+					if (openLengthRow(currentState, first, length1, row, i)) {
+						firstL1Counter++;
+					}
+				}
+
+				if (firstRT == length2) {
+					if (openLengthRow(currentState, first, length2, row, i)) {
+						firstL2Counter++;
+					}
+				}
+
+				if (firstRT == length3) {
+					if (openLengthRow(currentState, first, length3, row, i)) {
+						firstL3Counter++;
+					}
+				}
+
 			} else if (thisPosition == second) {
-				firstRT = 0; // We found the second color at [row][i], so break the running total for the first color
-
-				if (secondRT >= length1) {
-					secondL1Counter++;
-				}
-
-				if (secondRT >= length2) {
-					secondL2Counter++;
-				}
-
-				if (secondRT >= length3) {
-					secondL3Counter++;
-				}
-
+				firstRT = 0;
 				secondRT++;
+
+				if (secondRT == length1) {
+					if (openLengthRow(currentState, second, length1, row, i)) {
+						secondL1Counter++;
+					}
+				}
+
+				if (secondRT == length2) {
+					if (openLengthRow(currentState, second, length2, row, i)) {
+						secondL2Counter++;
+					}
+				}
+
+				if (secondRT == length3) {
+					if (openLengthRow(currentState, second, length3, row, i)) {
+						secondL3Counter++;
+					}
+				}
+
 			}
 		}
 
@@ -183,37 +194,49 @@ public class Evaluator {
 		for (int i = 0; i < Game.ROW_NUMBERS; i++) {
 			final SquareState thisPosition = currentState[i][col];
 			if (thisPosition == first) {
-				secondRT = 0; // We found the first color so break the running total of the second color
-
-				if (firstRT >= length1) {
-					firstL1Counter++;
-				}
-
-				if (firstRT >= length2) {
-					firstL2Counter++;
-				}
-
-				if (firstRT >= length3) {
-					firstL3Counter++;
-				}
-
+				secondRT = 0;
 				firstRT++;
+
+				if (firstRT == length1) {
+					if (openLengthCol(currentState, first, length1, i, col)) {
+						firstL1Counter++;
+					}
+				}
+
+				if (firstRT == length2) {
+					if (openLengthCol(currentState, first, length2, i, col)) {
+						firstL2Counter++;
+					}
+				}
+
+				if (firstRT == length3) {
+					if (openLengthCol(currentState, first, length3, i, col)) {
+						firstL3Counter++;
+					}
+				}
+
 			} else if (thisPosition == second) {
-				firstRT = 0; // We found the second color so break the running total for the first color
-
-				if (secondRT >= length1) {
-					secondL1Counter++;
-				}
-
-				if (secondRT >= length2) {
-					secondL2Counter++;
-				}
-
-				if (secondRT >= length3) {
-					secondL3Counter++;
-				}
-
+				firstRT = 0;
 				secondRT++;
+
+				if (secondRT == length1) {
+					if (openLengthCol(currentState, second, length1, i, col)) {
+						secondL1Counter++;
+					}
+				}
+
+				if (secondRT == length2) {
+					if (openLengthCol(currentState, second, length2, i, col)) {
+						secondL2Counter++;
+					}
+				}
+
+				if (secondRT == length3) {
+					if (openLengthCol(currentState, second, length3, i, col)) {
+						secondL3Counter++;
+					}
+				}
+
 			}
 		}
 
@@ -434,6 +457,27 @@ public class Evaluator {
 			}
 		}
 		return longestDiag;
+	}
+
+	private static boolean openLengthCol(SquareState[][] currentState, SquareState color, int length, int i, int j) {
+
+		// if left boundary or not free, check if right side is free
+		if ((i - length < 0) || (currentState[i - length][j] != SquareState.PINK)) {
+			return i + 1 < Game.ROW_NUMBERS && currentState[i + 1][j] == SquareState.PINK;
+		}
+
+		// If left is free, check if right side is not my color
+		return (i + 1 >= Game.ROW_NUMBERS) || currentState[i + 1][j] != color;
+	}
+
+	private static boolean openLengthRow(SquareState[][] currentState, SquareState color, int length, int i, int j) {
+		// if top boundary or not free, check if right side is free
+		if ((j - length < 0) || (currentState[i][j - length] != SquareState.PINK)) {
+			return j + 1 < Game.COL_NUMBERS && currentState[i][j + 1] == SquareState.PINK;
+		}
+
+		// If top is free, check if bottom side is not my color
+		return (j + 1 >= Game.COL_NUMBERS) || currentState[i][j + 1] != color;
 	}
 	
 }
