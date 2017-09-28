@@ -121,13 +121,17 @@ class Game(object):
         print '\n'
         for x in range(self.board.width):
             strn = ''
+            if x == 0:
+                strn = '0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 \n'
             for y in range(self.board.height):
+                if y == 0:
+                    strn = strn + str(x) + ' '
                 if board[x][y] == None:
-                    strn = strn + '_'
+                    strn = strn + '_ '
                 elif board[x][y] == team1:
-                    strn = strn + 'X'
+                    strn = strn + 'X '
                 else:
-                    strn = strn + 'O'
+                    strn = strn + 'O '
             print strn
 
         for x in range(self.board.width):

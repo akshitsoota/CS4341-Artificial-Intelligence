@@ -104,22 +104,22 @@ public class Game {
                             if(Evaluator.isStateWorthExpanding(currentState, i, j)) {
                                 //System.out.println(i + "," + j + " is worth expanding");
                                 int currentStateValue = iterativeDeepeningMove(currentState, depth, OPPONENT_COLOR, alpha, beta);
+                                if(currentStateValue != 0) {
+                                    System.out.println("Value for row " + i + " and col " + j +" is " + currentStateValue );
+                                }
                                 if (currentStateValue > currentMax) {
                                     currentMax = currentStateValue;
                                     maxI = i;
                                     maxJ = j;
                                 }
-                                if(currentStateValue != 0) {
-                                    System.out.println("Value for row " + i + " and col " + j +" is " + currentStateValue );                              	
-                                }
-                            } else {
-                                //System.out.println(i + "," + j + " is not worth expanding");
                             }
                             currentState[i][j] = SquareState.PINK;
                         }
                     }
                 }
 
+                System.out.println("Best Move found: " + maxI + ", " + maxJ);
+                System.out.println();
                 this.bestMoveSoFar = new Pair<>(maxI, maxJ);
                 depth++;
             }
