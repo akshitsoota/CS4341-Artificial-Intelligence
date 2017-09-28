@@ -174,6 +174,7 @@ public class Evaluator {
 				firstRT++;
 
 				if (firstRT == length1) {
+					// Check if our length found so far is open or half-open, and do the same for the remaining lengths
 					if (openLengthRow(currentState, first, length1, row, i)) {
 						firstL1Counter++;
 					}
@@ -216,6 +217,7 @@ public class Evaluator {
 			}
 		}
 
+		// Return a new array to contain the lengths found
 		return new int[]{firstL1Counter, firstL2Counter, firstL3Counter, secondL1Counter, secondL2Counter, secondL3Counter};
 	}
 
@@ -285,7 +287,8 @@ public class Evaluator {
 
 			}
 		}
-
+		
+		// Return a new array to contain the lengths found
 		return new int[]{firstL1Counter, firstL2Counter, firstL3Counter, secondL1Counter, secondL2Counter, secondL3Counter};
 	}
 	
@@ -329,6 +332,8 @@ public class Evaluator {
 				secondRT++;
 			}
 		}
+		
+		// Return a new array to contain the lengths found
 		return new int[]{firstL1Counter, firstL2Counter, firstL3Counter, secondL1Counter, secondL2Counter, secondL3Counter};
 	}
 	
@@ -372,6 +377,8 @@ public class Evaluator {
 				secondRT++;
 			}
 		}
+		
+		// Return a new array to contain the lengths found
 		return new int[]{firstL1Counter, firstL2Counter, firstL3Counter, secondL1Counter, secondL2Counter, secondL3Counter};
 	}
 	
@@ -390,7 +397,6 @@ public class Evaluator {
 			
 			// If there are at least 5 in a row in a given column, the board is terminal- return
 			if(maxInRow >= 5) {
-				//System.out.println("5 in a row found for " + color + " in row " + i);
 				return 5;
 			}
 			
@@ -406,7 +412,6 @@ public class Evaluator {
 			
 			// If there are at least 5 in a row in a given row, the board is terminal- return
 			if(maxInCol >= 5) {
-				//System.out.println("5 in a row found for " + color + " in col " + i);
 				return 5;
 			}
 			
@@ -422,7 +427,6 @@ public class Evaluator {
 			
 			// If there are at least 5 in a row in a given row, the board is terminal- return
 			if(maxInNWSE >= 5) {
-				//System.out.println("5 in a row found for " + color + " in NWSE diagonal " + i + ",0");
 				return 5;
 			}
 			
@@ -438,7 +442,6 @@ public class Evaluator {
 			
 			// If there are at least 5 in a row in a given row, the board is terminal- return
 			if(maxInNWSE >= 5) {
-				//System.out.println("5 in a row found for " + color + " in NWSE diagonal 0," + i);
 				return 5;
 			}
 			
@@ -455,7 +458,6 @@ public class Evaluator {
 			
 			// If there are at least 5 in a row in a given row, the board is terminal- return
 			if(maxInSWNE >= 5) {
-				//System.out.println("5 in a row found for " + color + " in SWNE diagonal " + i + "," + (Game.COL_NUMBERS - 1));
 				return 5;
 			}
 			
@@ -470,7 +472,6 @@ public class Evaluator {
 			
 			// If there are at least 5 in a row in a given row, the board is terminal- return
 			if(maxInSWNE >= 5) {
-				//System.out.println("5 in a row found for " + color + " in SWNE diagonal 0," + i);
 				return 5;
 			}
 			
@@ -493,22 +494,14 @@ public class Evaluator {
 	private static int getMaxRow(SquareState[][] currentState, int row, SquareState color) {
 		int longestRow = 0;
 		int currentRow = 0;
-		//boolean gapAccountedFor = false;
 		for(int i = 0; i < Game.COL_NUMBERS; i++) {
 			if(currentState[row][i] == color) {
 				currentRow++;
 			} else {
-				//if(!gapAccountedFor && currentState[row][i] == SquareState.PINK) {
-				//	currentRow++;
-				//	gapAccountedFor = true;
-				//} else {
-					// If our contiguous row is broken, update the maximum if needed and reset our counter to 0
-					if(longestRow < currentRow) {
-						longestRow = currentRow;
-					}
-				//	gapAccountedFor = false;
-					currentRow = 0;
-				//}				
+				if(longestRow < currentRow) {
+					longestRow = currentRow;
+				}
+				currentRow = 0;
 			}
 		}
 		return longestRow;
@@ -524,75 +517,78 @@ public class Evaluator {
 	private static int getMaxCol(SquareState[][] currentState, int col, SquareState color) {
 		int longestCol = 0;
 		int currentCol = 0;
-		//boolean gapAccountedFor = false;
 		for(int i = 0; i < Game.ROW_NUMBERS; i++) {
 			if(currentState[i][col] == color) {
 				currentCol++;
 			} else {
-				//if(!gapAccountedFor && currentState[i][col] == SquareState.PINK) {
-				//	currentCol++;
-				//	gapAccountedFor = true;
-				//} else {
-					// If our contiguous row is broken, update the maximum if needed and reset our counter to 0
-					if(longestCol < currentCol) {
-						longestCol = currentCol;
-					}
-				//	gapAccountedFor = false;
-					currentCol = 0;
-				//}
+				// If our contiguous row is broken, update the maximum if needed and reset our counter to 0
+				if(longestCol < currentCol) {
+					longestCol = currentCol;
+				}
+				currentCol = 0;
 			}
 		}
 		return longestCol;
 	}
 	
+	/**
+	 * Iterates through the NorthWest to SouthEast diagonal starting at the given row and column, looking for longest contiguous in-a-row of stones
+	 * @param currentState The current board state
+	 * @param row The row index to start at
+	 * @param col The column index to start at
+	 * @param color The color of the stone to check with
+	 * @return The longest contiguous in-a-row of stones in this diagonal
+	 */
 	private static int getMaxDiagNWSE(SquareState[][] currentState, int row, int col, SquareState color) {
 		int longestDiag = 0;
 		int currentDiag = 0;
-		//boolean gapAccountedFor = false;
 		for(int i = row, j = col; i < Game.ROW_NUMBERS && j < Game.COL_NUMBERS; i++, j++) {
 			if(currentState[i][j] == color) {
 				currentDiag++;
 			} else {
-				//if(!gapAccountedFor && currentState[i][j] == SquareState.PINK) {
-				//	currentDiag++;
-				//	gapAccountedFor = true;
-				//} else {
-					if(longestDiag < currentDiag) {
-						longestDiag = currentDiag;
-					}
-				//	gapAccountedFor = false;
-					currentDiag = 0;
-				//}
+				if(longestDiag < currentDiag) {
+					longestDiag = currentDiag;
+				}
+				currentDiag = 0;
 			}
 		}
 		return longestDiag;
 	}
 	
+	/**
+	 * Iterates through the SouthWest to NorthEast diagonal starting at the given row and column, looking for longest contiguous in-a-row of stones
+	 * @param currentState The current board state
+	 * @param row The row index to start at
+	 * @param col The column index to start at
+	 * @param color The color of the stone to check with
+	 * @return The longest contiguous in-a-row of stones in this diagonal
+	 */
 	private static int getMaxDiagSWNE(SquareState[][] currentState, int row, int col, SquareState color) {
 		int longestDiag = 0;
 		int currentDiag = 0;
-		//boolean gapAccountedFor = false;
 		for(int i = row, j = col; i >= 0 && j >= 0; i--, j--) {
 			if(currentState[i][j] == color) {
 				currentDiag++;
 			} else {
-				//if(!gapAccountedFor && currentState[i][j] == SquareState.PINK) {
-				//	currentDiag++;
-				//	gapAccountedFor = true;
-				//} else {
-					if(longestDiag < currentDiag) {
-						longestDiag = currentDiag;
-					}
-				//	gapAccountedFor = false;
-					currentDiag = 0;
-				//}
+				if(longestDiag < currentDiag) {
+					longestDiag = currentDiag;
+				}
+				currentDiag = 0;
 			}
 		}
 		return longestDiag;
 	}
 
+	/**
+	 * Helper function to determine if a row is open or half-open
+	 * @param currentState The current board state
+	 * @param color The color of stone to check with
+	 * @param length The length to look for
+	 * @param i The row of the board to check
+	 * @param j The column of the board to check
+	 * @return Returns true if it's open, and false if it's half-open
+	 */
 	private static boolean openLengthCol(SquareState[][] currentState, SquareState color, int length, int i, int j) {
-
 		// if left boundary or not free, check if right side is free
 		if ((i - length < 0) || (currentState[i - length][j] != SquareState.PINK)) {
 			return i + 1 < Game.ROW_NUMBERS && currentState[i + 1][j] == SquareState.PINK;
@@ -602,6 +598,15 @@ public class Evaluator {
 		return (i + 1 >= Game.ROW_NUMBERS) || currentState[i + 1][j] != color;
 	}
 
+	/**
+	 * Helper function to determine if a column is open or half-open
+	 * @param currentState The current board state
+	 * @param color The color of stone to check with
+	 * @param length The length to look for
+	 * @param i The row of the board to check
+	 * @param j The column of the board to check
+	 * @return Returns true if it's open, and false if it's half-open
+	 */
 	private static boolean openLengthRow(SquareState[][] currentState, SquareState color, int length, int i, int j) {
 		// if top boundary or not free, check if right side is free
 		if ((j - length < 0) || (currentState[i][j - length] != SquareState.PINK)) {

@@ -56,8 +56,6 @@ public class FileInterfaceImpl implements FileInterface {
                 // No move in the move_file; we're playing first
                 playedMoved = game.playFirstMove();
             } else {
-            	System.out.println(GROUP_NAME + " read in:");
-
             	// A move was read in; sanitize the splitted array of any new-line characters
                 splitted[2] = splitted[2].replaceAll("\r\n", "").replaceAll("\n", "");
 
