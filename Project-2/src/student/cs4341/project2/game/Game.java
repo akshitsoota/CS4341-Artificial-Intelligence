@@ -8,21 +8,29 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 public class Game {
+	// Definitions for the board size
     public static final int ROW_NUMBERS = 15;
     public static final int COL_NUMBERS = 15;
     private static final int EVALUATION_SLEEP = 8000; // ms
 
+    // Definitions for our and opponents color
     private SquareState MY_COLOR = SquareState.WHITE;
     private SquareState OPPONENT_COLOR = SquareState.BLACK;
 
+    // Our board
     private SquareState[][] board;
-    private int moveNumber;
 
+    /**
+     * Default constructor for game. Initializes the board to the correct dimensions
+     */
     private Game() {
         this.board = new SquareState[Game.ROW_NUMBERS][Game.COL_NUMBERS];
-        this.moveNumber = 0;
     }
 
+    /**
+     * Plays the first move in this game, which is always the center of the board
+     * @return Returns a Pair<String, Integer> indicating the coordinate of the played move
+     */
     public Pair<String, Integer> playFirstMove() {
     	final Pair<String, Integer> playedMove = new Pair<>("h", 8);
 
@@ -32,14 +40,19 @@ public class Game {
         return playedMove;
     }
 
+    /**
+     * Considers the move played by the opponent and determines what move to play next
+     * @param movePlayed The opponent's move
+     * @return Returns a Pair<String, Integer> indicating the coordinate of the played move
+     */
     public Pair<String, Integer> playWithOpponentMove(final Pair<String, Integer> movePlayed) {
         final Pair<Integer, Integer> playedMove = Utilities.letterNumberPairToColRow(movePlayed);
 
         this.board[playedMove.first][playedMove.second] = OPPONENT_COLOR;
 
-        // TODO: remove this as there's a better way
         SquareState[][] currentState = Game.copySquareStateArray(this.board);
 
+        // Hold onto the x,y for our best move so far
         int bestMoveSoFarI = Integer.MIN_VALUE;
         int bestMoveSoFarJ = Integer.MIN_VALUE;
 
@@ -65,88 +78,101 @@ public class Game {
         threading.shutdownNow();
 
         // Perform the best move found so far!
-        this.moveNumber++;
         this.board[bestMoveSoFarI][bestMoveSoFarJ] = MY_COLOR;
         return Utilities.colRowToLetterNumberPair(bestMoveSoFarI, bestMoveSoFarJ);
     }
 
+    /**
+     * Private internal class to be spawned as a separate thread. This will run the computations for the best move and keep
+     * BestMovePossibleI/J up to date for the parent thread
+     */
     private class PlayRunnable implements Runnable {
         private final SquareState[][] currentState;
         Pair<Integer, Integer> bestMoveSoFar;
 
+        /**
+         * Default constructor for this thread class
+         * @param currentState The current state of the board
+         * @param bestMoveSoFarI The row index of the best move so far
+         * @param bestMoveSoFarJ The column index of the best move so far
+         */
         PlayRunnable(final SquareState[][] currentState, final int bestMoveSoFarI, final int bestMoveSoFarJ) {
             this.currentState = currentState;
             this.bestMoveSoFar = new Pair<>(bestMoveSoFarI, bestMoveSoFarJ);
         }
 
         @Override
+        /**
+         * Main method for this thread. This runs our alpha-beta pruning and expansion heuristics
+         */
         public void run() {
             int depth = 1;
 
-            // TODO: think about if we want to compare
-            int bestMoveMax = Integer.MIN_VALUE;
-
             while (!Thread.currentThread().isInterrupted()) {
-                System.out.println("beginning depth " + depth);
-                //if (depth >= 2) break;
-
-                int maxI = Integer.MIN_VALUE;
+            	// Initialize our values to hold onto our best move coordinates for this depth
+            	int maxI = Integer.MIN_VALUE;
                 int maxJ = Integer.MIN_VALUE;
                 int currentMax = Integer.MIN_VALUE;
 
+                // Initialize our alpha and beta for pruning
                 int alpha = Integer.MIN_VALUE;
                 int beta = Integer.MAX_VALUE;
 
+                // Iterate through all possible moves on the board for us
                 for (int i = 0; i < currentState.length; i++) {
                     for (int j = 0; j < currentState[0].length; j++) {
                         if (currentState[i][j] == SquareState.PINK) {
                             currentState[i][j] = MY_COLOR;
+                            
+                            // Determine if this board is worth expanding (is the move adjacent to any existing stones?)
                             if(Evaluator.isStateWorthExpanding(currentState, i, j)) {
-                                //System.out.println(i + "," + j + " is worth expanding");
                                 int currentStateValue = iterativeDeepeningMove(currentState, depth, OPPONENT_COLOR, alpha, beta);
-                                if(currentStateValue != 0) {
-                                    //System.out.println("Value for row " + i + " and col " + j +" is " + currentStateValue );
-                                }
+                                // If the value found here is greater than our best so far, update the variables
                                 if (currentStateValue > currentMax) {
                                     currentMax = currentStateValue;
                                     maxI = i;
                                     maxJ = j;
-                                }
-                                if(currentStateValue != 0) {
-                                    //System.out.println("Value for row " + i + " and col " + j +" is " + currentStateValue );                              	
-                                }
-                            } else {
-                                //System.out.println(i + "," + j + " is not worth expanding");
+                                } 
                             }
+                            
+                            // Reset this move to check the next permutation
                             currentState[i][j] = SquareState.PINK;
                         }
                     }
                 }
-
-                System.out.println("Best Move found: " + maxI + ", " + maxJ);
-                //System.out.println();
                 this.bestMoveSoFar = new Pair<>(maxI, maxJ);
                 depth++;
             }
         }
     }
 
+    /**
+     * Begins our Iterative Deepening Search with alpha-beta pruning
+     * @param board The state of the board with the hypothetical move added
+     * @param depth The current depth of our IDS
+     * @param turn Which player's move it is
+     * @param alpha Our alpha value
+     * @param beta Our beta value
+     * @return Returns the evaluation value for this move, or the utility value if this is a terminal board
+     */
     private int iterativeDeepeningMove(SquareState[][] board, int depth, SquareState turn, int alpha, int beta) {
+    	// If our turn has ended, kill the thread and return a negative value
         if (Thread.currentThread().isInterrupted()) {
             return Integer.MIN_VALUE;
         }
 
+        // First check if this board is terminal. If it is, return and halt execution
         final int terminalValue = Evaluator.isTerminal(board, MY_COLOR, OPPONENT_COLOR);
-
         if (terminalValue != 0) {
-        	//System.out.println(terminalValue + " is terminal");
             return terminalValue;
         }
 
+        // If we have reached the top of our depth, evaluate this move and return
         if (depth == 0) {
             return Evaluator.evaluateMove(board, MY_COLOR, OPPONENT_COLOR);
         }
 
+        // Otherwise, begin alpha-beta pruning
         // MAX function
         if (turn == MY_COLOR) {
             int max = Integer.MIN_VALUE;
@@ -187,16 +213,25 @@ public class Game {
         return min;
     }
     
+    /**
+     * @return Returns our stone color
+     */
     public SquareState getMyColor() {
     	return MY_COLOR;
     }
     
+    /**
+     * @return Returns the enemy's stone color
+     */
     public SquareState getEnemyColor() {
     	return OPPONENT_COLOR;
     }
     
+    /**
+     * Factory method for the Game object
+     * @return Returns an initialized instance of the Game with an empty board
+     */
     public static Game newInstance() {
-
         Game game = new Game();
         for (int i = 0; i < Game.ROW_NUMBERS; i++) {
             for (int j = 0; j < Game.COL_NUMBERS; j++) {
@@ -206,6 +241,11 @@ public class Game {
         return game;
     }
 
+    /**
+     * Helper function to copy our board state to a new array to prevent mutation
+     * @param board The current board state
+     * @return Returns a new board matching the provided board
+     */
     private static SquareState[][] copySquareStateArray(SquareState[][] board) {
         SquareState[][] newState = new SquareState[ROW_NUMBERS][COL_NUMBERS];
         for (int i = 0; i < board.length; i++) {
