@@ -8,21 +8,30 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class FileInterfaceImpl implements FileInterface {
-    private static final String GROUP_NAME = "team1"; // TODO: Come up with a creative name
+    /**
+     * The team name that we will be playing as
+     */
+    private static final String GROUP_NAME = "ASKAgents";
 
     private static final String FILE_MOVE = "move_file";
     private static final String FILE_GROUP_NAME = GROUP_NAME + ".go";
     private static final String FILE_END_GAME = "end_game";
 
-    //private static final int REFEREE_POLL_PERIOD = 120; // ms
     private static final int REFEREE_POLL_PERIOD = 250;
 
+    /**
+     * Path transformer- allows you to mend paths as applicable
+     */
     private final Function<String, String> pathTransformer;
 
     private FileInterfaceImpl(final Function<String, String> pathTransformer) {
         this.pathTransformer = pathTransformer;
     }
 
+    /**
+     * Starts playing with the given game
+     * @param game
+     */
     @Override
     public void startPlayingWith(final Game game) {
         final Path moveFilePath = Paths.get(pathTransformer.apply(FileInterfaceImpl.FILE_MOVE));
@@ -44,14 +53,16 @@ public class FileInterfaceImpl implements FileInterface {
 
             final String[] splitted = moveString.split(" ");
             if (splitted.length != 3) {
+                // No move in the move_file; we're playing first
                 playedMoved = game.playFirstMove();
             } else {
             	System.out.println(GROUP_NAME + " read in:");
-            	for(int i = 0; i < splitted.length; i++) {
-            		System.out.println(splitted[i]);
-            	}
 
-                playedMoved = game.playWithOpponentMove(new Pair<>(splitted[1], Integer.valueOf(splitted[2].replaceAll("\r\n", "").replaceAll("\n", ""))));
+            	// A move was read in; sanitize the splitted array of any new-line characters
+                splitted[2] = splitted[2].replaceAll("\r\n", "").replaceAll("\n", "");
+
+                // Hand-off the move to the game to perform
+            	playedMoved = game.playWithOpponentMove(new Pair<>(splitted[1], Integer.valueOf(splitted[2])));
             }
 
             // Write this move into the move file
@@ -73,6 +84,11 @@ public class FileInterfaceImpl implements FileInterface {
         }
     }
 
+    /**
+     * Static factory method that creates a new instance of <code>FileInterfaceImpl</code>
+     * @param pathTransformer
+     * @return
+     */
     public static FileInterface newInstance(final Function<String, String> pathTransformer) {
         if (pathTransformer == null) {
             return null;
