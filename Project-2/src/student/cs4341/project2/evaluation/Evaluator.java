@@ -5,49 +5,18 @@ import student.cs4341.project2.game.SquareState;
 
 public class Evaluator {
 	
-	// TODO: Check all diagonals (in both directions)
-	
 	/**
 	 * Primary function within Evaluator to rate a given board state. This function determines whether the
 	 * given board state is terminal, and if not, assigns a value to it for AB pruning and selection.
 	 * @param currentState The SquareState[][] of the hypothetical move
 	 * @param myColor The color of our pieces
 	 * @param enemyColor The color of opponent pieces
-	 * @return Returns the int evaluation score of this board state. These values can be -1000 if opponent wins, 1000 if we win, 
-	 * or anywhere in between from evaluation
+	 * @return Returns the int evaluation score of this board state. 
 	 */
 	public static int evaluateMove(SquareState[][] currentState, SquareState myColor, SquareState enemyColor) {
 		// Check if provided move is terminal (for us or enemy)
-		// If not, initialize vars to count number of 3 in-a-rows and 4 in-a-rows for
+		// If not, initialize vars to count number of 2 in-a-rows, 3 in-a-rows and 4 in-a-rows for
 		// us and enemy in currentState for evaluation
-		/*
-		int enemyFours = 0;
-		int ourFours = 0;
-		int enemyThrees = 0;
-		int ourThrees = 0;
-
-		// In every column, go through all rows and count number of 3s and 4s (includes overlap)
-		for(int i = 0; i < Game.COL_NUMBERS; i++) {
-			enemyFours += countInACol(currentState, enemyColor, i, 4);
-			ourFours += countInACol(currentState, myColor, i, 4);
-			enemyThrees += countInACol(currentState, enemyColor, i, 3);
-			ourThrees += countInACol(currentState, myColor, i, 3);
-		}
-
-		// In every row, go through all columns and count number of 3s and 4s (includes overlap)
-		for(int i = 0; i < Game.ROW_NUMBERS; i++) {
-			enemyFours += countInARow(currentState, enemyColor, i, 4);
-			ourFours += countInARow(currentState, myColor, i, 4);
-			enemyThrees += countInARow(currentState, enemyColor, i, 3);
-			ourThrees += countInARow(currentState, myColor, i, 3);
-		}
-
-		// Here, we would go through all possible diagonals, but this part has not been implemented yet
-
-		// Finally, return these values with a factor for weighting
-		return (15*ourFours) + (5*ourThrees) - (15*enemyFours) - (5*enemyThrees);
-		 */
-
 		int enemyFours = 0;
 		int ourFours = 0;
 		int enemyThrees = 0;
@@ -55,9 +24,9 @@ public class Evaluator {
 		int enemyTwos = 0;
 		int ourTwos = 0;
 
-		// In every column, go through all rows and count number of 3s and 4s (includes overlap)
+		// In every column, go through all rows and count number of 2s, 3s and 4s (includes overlap)
 		for(int i = 0; i < Game.COL_NUMBERS; i++) {
-			// FL1C, FL2C, SL1C, SL2C
+			// (F)irst SquareState (L)ength(1) (C)ount, FL2C, FL3C, SL1C, SL2C, SL3C
 			int[] values = countInACol(currentState, myColor, enemyColor, i, 4, 3, 2);
 
 			enemyFours += values[3];
@@ -70,7 +39,7 @@ public class Evaluator {
 
 		// In every row, go through all columns and count number of 3s and 4s (includes overlap)
 		for(int i = 0; i < Game.ROW_NUMBERS; i++) {
-			// FL1C, FL2C, SL1C, SL2C
+			// FL1C, FL2C, FL3C, SL1C, SL2C, SL3C
 			int[] values = countInARow(currentState, myColor, enemyColor, i, 4, 3, 2);
 
 			enemyFours += values[3];
@@ -79,24 +48,9 @@ public class Evaluator {
 			ourThrees += values[1];
 			enemyTwos += values[5];
 			ourTwos += values[2];
-
-//			enemyFours += countInARow(currentState, enemyColor, i, 4);
-//			ourFours += countInARow(currentState, myColor, i, 4);
-//			enemyThrees += countInARow(currentState, enemyColor, i, 3);
-//			ourThrees += countInARow(currentState, myColor, i, 3);
 		}
 
-		// Here, we would go through all possible diagonals, but this part has not been implemented yet
-
-		// Finally, return these values with a factor for weighting
-		//System.out.println("Evaluate Function value: " + String.valueOf((15*ourFours) + (5*ourThrees) - (15*enemyFours) - (5*enemyThrees)));
-//		return ((41*ourFours) + (23*ourThrees) + (11*ourTwos) - (47*enemyFours) - (31*enemyThrees) - (17*enemyTwos));
-//		return ((60*ourFours) + (40*ourThrees) + (20*ourTwos) - (50*enemyFours) - (30*enemyThrees) - (10*enemyTwos));
 		return ((263*ourFours) + (37*ourThrees) + (3*ourTwos) - (257*enemyFours) - (31*enemyThrees) - (2*enemyTwos));
-
-
-
-//		return ((int) (Math.random()*1000));
 	}
 	
 	/**
@@ -149,38 +103,23 @@ public class Evaluator {
 		return (row >= 0 && col >= 0 && row < Game.ROW_NUMBERS && col < Game.COL_NUMBERS);
 	}
 	
-//	/**
-//	 * Counts the number of X in-a-rows that can be generated in a given row. This function does not yet account for
-//	 * holes in play, such as XX_XX, which can lead to a terminal state
-//	 * @param currentState The hypothetical board state
-//	 * @param color The color to count in-a-row of
-//	 * @param row The row of the board to check
-//	 * @param length Represents X in the description- how many stones in a row are we looking for?
-//	 * @return The number of X in-a-rows from this row
-//	 */
-//	public static int countInARow(SquareState[][] currentState, SquareState color, int row, int length) {
-//		// Iterate through all columns in this row to determine number of contiguous stones of length X (overlapping)
-//		int frequency = 0;
-//		int runningTotal = 0;
-//		for(int i = 0; i < Game.COL_NUMBERS; i++) {
-//			if(currentState[row][i] == color) {
-//				if(runningTotal >= length) {
-//					frequency++;
-//				} else {
-//					runningTotal++;
-//				}
-//			} else {
-//				runningTotal = 0;
-//			}
-//		}
-//
-//		return frequency;
-//	}
-
+	/**
+	 * Counts the number of X in-a-rows with the given lengths of the first and second color state
+	 * @param currentState The hypothetical board state
+	 * @param first The first color to count in-a-row of
+	 * @param second The second color to count in-a-row of
+	 * @param row The row of the board to check
+	 * @param length1 How many stones in-a-row we are looking for
+	 * @param length2 Secondary number of stones in-a-row we are looking for
+	 * @param length 3 Tertiary number of stones in-a-row we are looking for
+	 * @return An array with six elements: the first SquareState with length1 count, length2 count,
+	 * and length3 count, and the second SquareState with length1 count, length2 count, and length3 count
+	 */
+		// RT = runningTotal, or number of contiguous in-a-line we've found of a given color
+		// L1 counter keeps track of the number of contiguous elements of certain color with length1; Similarly for L2 and L3
 	public static int[] countInARow(SquareState[][] currentState, SquareState first, SquareState second, int row, int length1, int length2, int length3) {
 		int firstRT = 0; int firstL1Counter = 0; int firstL2Counter = 0; int firstL3Counter = 0;
 		int secondRT = 0; int secondL1Counter = 0; int secondL2Counter = 0; int secondL3Counter = 0;
-
 
 		for (int i = 0; i < Game.COL_NUMBERS; i++) {
 			final SquareState thisPosition = currentState[row][i];
@@ -234,62 +173,20 @@ public class Evaluator {
 		return new int[]{firstL1Counter, firstL2Counter, firstL3Counter, secondL1Counter, secondL2Counter, secondL3Counter};
 	}
 
-//	public static int countInACol(SquareState[][] currentState, SquareState color, int col, int length) {
-//		// Iterate through all rows in this column to determine number of contiguous stones of length X (overlapping)
-//		int frequency = 0;
-//		int runningTotal = 0;
-//		for(int i = 0; i < Game.ROW_NUMBERS; i++) {
-//			if(currentState[i][col] == color) {
-//				if(runningTotal >= length) {
-//					frequency++;
-//				} else {
-//					runningTotal++;
-//				}
-//			} else {
-//				runningTotal = 0;
-//			}
-//		}
-//
-//		return frequency;
-//	}
-//
-//	/**
-//	 * See countInARow(). This function has a similar premise, but counts with columns instead
-//	 * @param currentState The hypothetical board state
-//	 * @param first The first color to count in-a-row of
-//	 * @param second The second color to count in-a-row of
-//	 * @param col The column of the board to check
-//	 * @param length How many stones in-a-row we are looking for
-//	 * @return How many possible in-a-rows exist in this column
-//	 */
-//	public static int[] countInACol(SquareState[][] currentState, SquareState first, SquareState second, int col, int length) {
-//		// first running total; first freq; second rt; second freq
-//		int returnValues[] = new int[]{0, 0, 0, 0};
-//
-//		for (int i = 0; i < Game.ROW_NUMBERS; i++) {
-//			final SquareState thisPosition = currentState[i][col];
-//			if (thisPosition == first) {
-//				returnValues[2] = 0;
-//
-//				if (returnValues[0] >= length) {
-//					returnValues[1]++;
-//				} else {
-//					returnValues[0]++;
-//				}
-//			} else if (thisPosition == second) {
-//				returnValues[0] = 0;
-//
-//				if (returnValues[2] >= length) {
-//					returnValues[3]++;
-//				} else {
-//					returnValues[2]++;
-//				}
-//			}
-//		}
-//
-//		return returnValues;
-//	}
-
+	/**
+	 * See countInARow(). This function has a similar premise, but counts with columns instead
+	 * @param currentState The hypothetical board state
+	 * @param first The first color to count in-a-row of
+	 * @param second The second color to count in-a-row of
+	 * @param col The column of the board to check
+	 * @param length1 How many stones in-a-row we are looking for
+	 * @param length2 Secondary number of stones in-a-row we are looking for
+	 * @param length3 Tertiary number of stones in-a-row we are looking for
+	 * @return An array with six elements: the first SquareState with length1 count, length2 count,
+	 * and length3 count, and the second SquareState with length1 count, length2 count, and length3 count
+	 */
+		// RT is the running total
+		// L1 counter keeps track of the number of contiguous elements of certain color with length1; Similarly for L2 and L3
 	public static int[] countInACol(SquareState[][] currentState, SquareState first, SquareState second, int col, int length1, int length2, int length3) {
 		int firstRT = 0; int firstL1Counter = 0; int firstL2Counter = 0; int firstL3Counter = 0;
 		int secondRT = 0; int secondL1Counter = 0; int secondL2Counter = 0; int secondL3Counter = 0;
