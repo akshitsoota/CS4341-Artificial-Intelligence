@@ -10,7 +10,7 @@ import java.util.concurrent.ScheduledExecutorService;
 public class Game {
     public static final int ROW_NUMBERS = 15;
     public static final int COL_NUMBERS = 15;
-    private static final int EVALUATION_SLEEP = 8000; // ms
+    private static final int EVALUATION_SLEEP = 4000; // ms
 
     private SquareState MY_COLOR = SquareState.WHITE;
     private SquareState OPPONENT_COLOR = SquareState.BLACK;
@@ -88,7 +88,7 @@ public class Game {
 
             while (!Thread.currentThread().isInterrupted()) {
                 System.out.println("beginning depth " + depth);
-                if (depth >= 2) break;
+                //if (depth >= 2) break;
 
                 int maxI = Integer.MIN_VALUE;
                 int maxJ = Integer.MIN_VALUE;
@@ -112,6 +112,11 @@ public class Game {
                                     maxI = i;
                                     maxJ = j;
                                 }
+                                if(currentStateValue != 0) {
+                                    //System.out.println("Value for row " + i + " and col " + j +" is " + currentStateValue );                              	
+                                }
+                            } else {
+                                //System.out.println(i + "," + j + " is not worth expanding");
                             }
                             currentState[i][j] = SquareState.PINK;
                         }
