@@ -37,7 +37,7 @@ public class Evaluator {
 			ourTwos += values[2];
 		}
 
-		// In every row, go through all columns and count number of 3s and 4s (includes overlap)
+		// In every row, go through all columns and count number of 2s, 3s and 4s (includes overlap)
 		for(int i = 0; i < Game.ROW_NUMBERS; i++) {
 			// FL1C, FL2C, FL3C, SL1C, SL2C, SL3C
 			int[] values = countInARow(currentState, myColor, enemyColor, i, 4, 3, 2);
@@ -49,8 +49,54 @@ public class Evaluator {
 			enemyTwos += values[5];
 			ourTwos += values[2];
 		}
-		System.out.println("Our twos = " + ourTwos + "..EnemyTwos =" + enemyTwos);
-		return ((17*ourFours) + (11*ourThrees) + (5*ourTwos) - (13*enemyFours) - (7*enemyThrees) - (2*enemyTwos));
+	
+		// Go through all NWSE diagonals and count number of 2s, 3s and 4s
+		for(int i = (Game.ROW_NUMBERS - 6); i >= 0; i--) {
+			int[] values = countInADiagNWSE(currentState, myColor, enemyColor, i, 0, 4, 3, 2);
+			
+			enemyFours += values[3];
+			ourFours += values[0];
+			enemyThrees += values[4];
+			ourThrees += values[1];
+			enemyTwos += values[5];
+			ourTwos += values[2];
+		}
+		for(int i = 1; i < (Game.COL_NUMBERS - 6); i++) {
+			int[] values = countInADiagNWSE(currentState, myColor, enemyColor, 0, i, 4, 3, 2);
+			
+			enemyFours += values[3];
+			ourFours += values[0];
+			enemyThrees += values[4];
+			ourThrees += values[1];
+			enemyTwos += values[5];
+			ourTwos += values[2];
+		}
+		
+		// Go through all SWNE diagonals and count number of 2s, 3s and 4s
+		for(int i = (Game.ROW_NUMBERS - 6); i >= 0; i--) {
+			int[] values = countInADiagSWNE(currentState, myColor, enemyColor, i, Game.COL_NUMBERS - 1, 4, 3, 2);
+			
+			enemyFours += values[3];
+			ourFours += values[0];
+			enemyThrees += values[4];
+			ourThrees += values[1];
+			enemyTwos += values[5];
+			ourTwos += values[2];
+		}
+		
+		for(int i = (Game.COL_NUMBERS - 6); i >= 0 ; i--) {
+			int[] values = countInADiagSWNE(currentState, myColor, enemyColor, 0, i, 4, 3, 2);
+			
+			enemyFours += values[3];
+			ourFours += values[0];
+			enemyThrees += values[4];
+			ourThrees += values[1];
+			enemyTwos += values[5];
+			ourTwos += values[2];
+		}
+		
+		// System.out.println("Our twos = " + ourTwos + "..EnemyTwos =" + enemyTwos);
+		return ((263*ourFours) + (37*ourThrees) + (3*ourTwos) - (257*enemyFours) - (31*enemyThrees) - (2*enemyTwos));
 	}
 	
 	/**
@@ -58,7 +104,7 @@ public class Evaluator {
 	 * @param currentState The hypothetical board state
 	 * @param myColor Our stone color
 	 * @param enemyColor Enemy stone color
-	 * @return Returns 1000 if the board is terminal (we win), -1000 if board is terminal (opponent wins), or
+	 * @return Returns 10000 if the board is terminal (we win), -10000 if board is terminal (opponent wins), or
 	 * 0 if not terminal
 	 */
 	public static int isTerminal(SquareState[][] currentState, SquareState myColor, SquareState enemyColor) {
@@ -124,38 +170,49 @@ public class Evaluator {
 		for (int i = 0; i < Game.COL_NUMBERS; i++) {
 			final SquareState thisPosition = currentState[row][i];
 			if (thisPosition == first) {
-				secondRT = 0; // We found the first color at [row][i], so break the running total of the second color
-
-				// The following "if"s increment the counter for number of possible N in-a-rows we can have so far
-				if (firstRT >= length1) {
-					firstL1Counter++;
-				}
-
-				if (firstRT >= length2) {
-					firstL2Counter++;
-				}
-
-				if (firstRT >= length3) {
-					firstL3Counter++;
-				}
-
+				secondRT = 0;
 				firstRT++;
+
+				if (firstRT == length1) {
+					if (openLengthRow(currentState, first, length1, row, i)) {
+						firstL1Counter++;
+					}
+				}
+
+				if (firstRT == length2) {
+					if (openLengthRow(currentState, first, length2, row, i)) {
+						firstL2Counter++;
+					}
+				}
+
+				if (firstRT == length3) {
+					if (openLengthRow(currentState, first, length3, row, i)) {
+						firstL3Counter++;
+					}
+				}
+
 			} else if (thisPosition == second) {
-				firstRT = 0; // We found the second color at [row][i], so break the running total for the first color
-
-				if (secondRT >= length1) {
-					secondL1Counter++;
-				}
-
-				if (secondRT >= length2) {
-					secondL2Counter++;
-				}
-
-				if (secondRT >= length3) {
-					secondL3Counter++;
-				}
-
+				firstRT = 0;
 				secondRT++;
+
+				if (secondRT == length1) {
+					if (openLengthRow(currentState, second, length1, row, i)) {
+						secondL1Counter++;
+					}
+				}
+
+				if (secondRT == length2) {
+					if (openLengthRow(currentState, second, length2, row, i)) {
+						secondL2Counter++;
+					}
+				}
+
+				if (secondRT == length3) {
+					if (openLengthRow(currentState, second, length3, row, i)) {
+						secondL3Counter++;
+					}
+				}
+
 			}
 		}
 
@@ -182,6 +239,62 @@ public class Evaluator {
 
 		for (int i = 0; i < Game.ROW_NUMBERS; i++) {
 			final SquareState thisPosition = currentState[i][col];
+			if (thisPosition == first) {
+				secondRT = 0;
+				firstRT++;
+
+				if (firstRT == length1) {
+					if (openLengthCol(currentState, first, length1, i, col)) {
+						firstL1Counter++;
+					}
+				}
+
+				if (firstRT == length2) {
+					if (openLengthCol(currentState, first, length2, i, col)) {
+						firstL2Counter++;
+					}
+				}
+
+				if (firstRT == length3) {
+					if (openLengthCol(currentState, first, length3, i, col)) {
+						firstL3Counter++;
+					}
+				}
+
+			} else if (thisPosition == second) {
+				firstRT = 0;
+				secondRT++;
+
+				if (secondRT == length1) {
+					if (openLengthCol(currentState, second, length1, i, col)) {
+						secondL1Counter++;
+					}
+				}
+
+				if (secondRT == length2) {
+					if (openLengthCol(currentState, second, length2, i, col)) {
+						secondL2Counter++;
+					}
+				}
+
+				if (secondRT == length3) {
+					if (openLengthCol(currentState, second, length3, i, col)) {
+						secondL3Counter++;
+					}
+				}
+
+			}
+		}
+
+		return new int[]{firstL1Counter, firstL2Counter, firstL3Counter, secondL1Counter, secondL2Counter, secondL3Counter};
+	}
+	
+	public static int[] countInADiagNWSE(SquareState[][] currentState, SquareState first, SquareState second, int row, int col, int length1, int length2, int length3) {
+		int firstRT = 0; int firstL1Counter = 0; int firstL2Counter = 0; int firstL3Counter = 0;
+		int secondRT = 0; int secondL1Counter = 0; int secondL2Counter = 0; int secondL3Counter = 0;
+
+		for(int i = row, j = col; i < Game.ROW_NUMBERS && j < Game.COL_NUMBERS; i++, j++) {
+			final SquareState thisPosition = currentState[i][j];
 			if (thisPosition == first) {
 				secondRT = 0; // We found the first color so break the running total of the second color
 
@@ -216,7 +329,49 @@ public class Evaluator {
 				secondRT++;
 			}
 		}
+		return new int[]{firstL1Counter, firstL2Counter, firstL3Counter, secondL1Counter, secondL2Counter, secondL3Counter};
+	}
+	
+	private static int[] countInADiagSWNE(SquareState[][] currentState, SquareState first, SquareState second, int row, int col, int length1, int length2, int length3) {
+		int firstRT = 0; int firstL1Counter = 0; int firstL2Counter = 0; int firstL3Counter = 0;
+		int secondRT = 0; int secondL1Counter = 0; int secondL2Counter = 0; int secondL3Counter = 0;
 
+		for(int i = row, j = col; i >= 0 && j >= 0; i--, j--) {
+			final SquareState thisPosition = currentState[i][j];
+			if (thisPosition == first) {
+				secondRT = 0; // We found the first color so break the running total of the second color
+
+				if (firstRT >= length1) {
+					firstL1Counter++;
+				}
+
+				if (firstRT >= length2) {
+					firstL2Counter++;
+				}
+
+				if (firstRT >= length3) {
+					firstL3Counter++;
+				}
+
+				firstRT++;
+			} else if (thisPosition == second) {
+				firstRT = 0; // We found the second color so break the running total for the first color
+
+				if (secondRT >= length1) {
+					secondL1Counter++;
+				}
+
+				if (secondRT >= length2) {
+					secondL2Counter++;
+				}
+
+				if (secondRT >= length3) {
+					secondL3Counter++;
+				}
+
+				secondRT++;
+			}
+		}
 		return new int[]{firstL1Counter, firstL2Counter, firstL3Counter, secondL1Counter, secondL2Counter, secondL3Counter};
 	}
 	
@@ -434,6 +589,27 @@ public class Evaluator {
 			}
 		}
 		return longestDiag;
+	}
+
+	private static boolean openLengthCol(SquareState[][] currentState, SquareState color, int length, int i, int j) {
+
+		// if left boundary or not free, check if right side is free
+		if ((i - length < 0) || (currentState[i - length][j] != SquareState.PINK)) {
+			return i + 1 < Game.ROW_NUMBERS && currentState[i + 1][j] == SquareState.PINK;
+		}
+
+		// If left is free, check if right side is not my color
+		return (i + 1 >= Game.ROW_NUMBERS) || currentState[i + 1][j] != color;
+	}
+
+	private static boolean openLengthRow(SquareState[][] currentState, SquareState color, int length, int i, int j) {
+		// if top boundary or not free, check if right side is free
+		if ((j - length < 0) || (currentState[i][j - length] != SquareState.PINK)) {
+			return j + 1 < Game.COL_NUMBERS && currentState[i][j + 1] == SquareState.PINK;
+		}
+
+		// If top is free, check if bottom side is not my color
+		return (j + 1 >= Game.COL_NUMBERS) || currentState[i][j + 1] != color;
 	}
 	
 }
