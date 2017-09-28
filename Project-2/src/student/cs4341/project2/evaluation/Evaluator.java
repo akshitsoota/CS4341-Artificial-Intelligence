@@ -390,7 +390,7 @@ public class Evaluator {
 			
 			// If there are at least 5 in a row in a given column, the board is terminal- return
 			if(maxInRow >= 5) {
-				System.out.println("5 in a row found for " + color + " in row " + i);
+				//System.out.println("5 in a row found for " + color + " in row " + i);
 				return 5;
 			}
 			
@@ -406,7 +406,7 @@ public class Evaluator {
 			
 			// If there are at least 5 in a row in a given row, the board is terminal- return
 			if(maxInCol >= 5) {
-				System.out.println("5 in a row found for " + color + " in col " + i);
+				//System.out.println("5 in a row found for " + color + " in col " + i);
 				return 5;
 			}
 			
@@ -422,7 +422,7 @@ public class Evaluator {
 			
 			// If there are at least 5 in a row in a given row, the board is terminal- return
 			if(maxInNWSE >= 5) {
-				System.out.println("5 in a row found for " + color + " in NWSE diagonal " + i + ",0");
+				//System.out.println("5 in a row found for " + color + " in NWSE diagonal " + i + ",0");
 				return 5;
 			}
 			
@@ -438,7 +438,7 @@ public class Evaluator {
 			
 			// If there are at least 5 in a row in a given row, the board is terminal- return
 			if(maxInNWSE >= 5) {
-				System.out.println("5 in a row found for " + color + " in NWSE diagonal 0," + i);
+				//System.out.println("5 in a row found for " + color + " in NWSE diagonal 0," + i);
 				return 5;
 			}
 			
@@ -455,7 +455,7 @@ public class Evaluator {
 			
 			// If there are at least 5 in a row in a given row, the board is terminal- return
 			if(maxInSWNE >= 5) {
-				System.out.println("5 in a row found for " + color + " in SWNE diagonal " + i + "," + (Game.COL_NUMBERS - 1));
+				//System.out.println("5 in a row found for " + color + " in SWNE diagonal " + i + "," + (Game.COL_NUMBERS - 1));
 				return 5;
 			}
 			
@@ -470,7 +470,7 @@ public class Evaluator {
 			
 			// If there are at least 5 in a row in a given row, the board is terminal- return
 			if(maxInSWNE >= 5) {
-				System.out.println("5 in a row found for " + color + " in SWNE diagonal 0," + i);
+				//System.out.println("5 in a row found for " + color + " in SWNE diagonal 0," + i);
 				return 5;
 			}
 			

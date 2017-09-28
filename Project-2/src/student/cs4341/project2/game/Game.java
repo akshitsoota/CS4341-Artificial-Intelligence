@@ -10,7 +10,7 @@ import java.util.concurrent.ScheduledExecutorService;
 public class Game {
     public static final int ROW_NUMBERS = 15;
     public static final int COL_NUMBERS = 15;
-    private static final int EVALUATION_SLEEP = 4000; // ms
+    private static final int EVALUATION_SLEEP = 8000; // ms
 
     private SquareState MY_COLOR = SquareState.WHITE;
     private SquareState OPPONENT_COLOR = SquareState.BLACK;
@@ -105,7 +105,7 @@ public class Game {
                                 //System.out.println(i + "," + j + " is worth expanding");
                                 int currentStateValue = iterativeDeepeningMove(currentState, depth, OPPONENT_COLOR, alpha, beta);
                                 if(currentStateValue != 0) {
-                                    System.out.println("Value for row " + i + " and col " + j +" is " + currentStateValue );
+                                    //System.out.println("Value for row " + i + " and col " + j +" is " + currentStateValue );
                                 }
                                 if (currentStateValue > currentMax) {
                                     currentMax = currentStateValue;
@@ -124,7 +124,7 @@ public class Game {
                 }
 
                 System.out.println("Best Move found: " + maxI + ", " + maxJ);
-                System.out.println();
+                //System.out.println();
                 this.bestMoveSoFar = new Pair<>(maxI, maxJ);
                 depth++;
             }
@@ -139,7 +139,7 @@ public class Game {
         final int terminalValue = Evaluator.isTerminal(board, MY_COLOR, OPPONENT_COLOR);
 
         if (terminalValue != 0) {
-        	System.out.println(terminalValue + " is terminal");
+        	//System.out.println(terminalValue + " is terminal");
             return terminalValue;
         }
 
