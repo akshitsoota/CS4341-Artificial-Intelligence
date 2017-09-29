@@ -2,6 +2,9 @@ GROUP MEMBERS: Ankit Kumar, Akshit Soota, Dan Alfred
 TEAM NAME: ASKAgents
 
 HOW TO COMPILE:
+A Jar version of our project has been included for testing, but if you would like to compile our source for
+verification, here's how:
+
 To compile our program, first navigate into src/student/cs4341/project2. Then, run the following command:
 javac evaluation/*.java fileinterface/*.java game/*.java *.java
 (In sum, compile all of the java files in each of the source folders together)
@@ -10,7 +13,12 @@ The compiled .class files should now be present in their respective directories.
 Additionally, our program was compiled and tested with Java 8, but should also compile on Java 7.
 
 HOW TO RUN:
-To run our program, navigate to src/ and run the following command:
+An executable of the src/ files has been included, named ASKAgents.jar. To run this, make sure the
+Jar file is in the same folder as the referee and enter the following command in that folder:
+java -jar ASKAgents.jar
+
+Additionally, if you would like to run our program after following the compilation steps above, run the following 
+command from src/:
 java student.cs4341.project2.Main
 
 The program will print out "Initialized game for ASKAgents" to indicate that it is ready.
