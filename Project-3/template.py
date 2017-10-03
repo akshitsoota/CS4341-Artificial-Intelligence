@@ -1,10 +1,6 @@
-from collections import Counter
-from itertools import tee
-
-from keras.models import Sequential
-from keras.layers import Dense, Activation
 import numpy as np
-from werkzeug._compat import izip
+from keras.layers import Dense, Activation
+from keras.models import Sequential
 
 
 def printimage(arr, char='X'):
