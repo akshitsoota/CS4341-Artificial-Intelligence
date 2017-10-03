@@ -1,6 +1,6 @@
-from keras.models import Sequential
-from keras.layers import Dense, Activation
 import numpy as np
+from keras.layers import Dense, Activation
+from keras.models import Sequential
 
 
 def printimage(arr, char='X'):
@@ -42,6 +42,13 @@ for idx, image in enumerate(images):
         mapping[the_tuple].append(image)
     else:
         mapping[the_tuple] = [image]
+
+# Shuffle the values in the mapping
+
+for key in range(len(mapping.keys())):
+    np.random.shuffle(mapping[tuple(generate_hot_one_vector(key))])
+    # import hashlib
+    # print(hashlib.sha1(str(mapping[tuple(generate_hot_one_vector(key))]).encode('utf-8')).hexdigest())
 
 # Model Template
 
