@@ -94,14 +94,12 @@ y_test = np.array(y_test)
 # Model Template
 
 model = Sequential()  # declare model
-model.add(Dense(10, input_shape=(28 * 28,), kernel_initializer='he_normal'))  # first layer
+model.add(Dense(100, input_shape=(28 * 28,), kernel_initializer='he_normal'))  # first layer
 model.add(Activation('relu'))
-#
-#
-#
-# Fill in Model Here
-#
-#
+
+model.add(Dense(50, kernel_initializer='he_normal'))  # second layer
+model.add(Activation('relu'))
+
 model.add(Dense(10, kernel_initializer='he_normal'))  # last layer
 model.add(Activation('softmax'))
 
