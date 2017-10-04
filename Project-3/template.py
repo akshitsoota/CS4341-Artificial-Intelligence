@@ -20,6 +20,12 @@ def generate_hot_one_vector(label, start=0, end=9):
 
     return original
 
+def get_value_from_hot_one_vector(vector):
+    for idx, value in enumerate(vector):
+        if value == 1:
+            return idx
+    return -1
+
 
 # Start loading up the files
 
@@ -27,7 +33,7 @@ images = np.load("images.npy")
 labels = list(np.array(np.load("labels.npy")))
 
 # Covert each of the images from a matrix to a vector
-flattened_images = [list(np.array(img).flatten()) for img in images]
+images = [list(np.array(img).flatten()) for img in images]
 
 # Convert each label to hot-one vector
 labels = list(map(generate_hot_one_vector, labels))
@@ -49,6 +55,41 @@ for key in range(len(mapping.keys())):
     np.random.shuffle(mapping[tuple(generate_hot_one_vector(key))])
     # import hashlib
     # print(hashlib.sha1(str(mapping[tuple(generate_hot_one_vector(key))]).encode('utf-8')).hexdigest())
+
+x_train = []
+y_train = []
+x_val = []
+y_val = []
+x_test = []
+y_test = []
+
+for key, value in mapping.items():
+
+    size = len(value)
+
+    train = value[0:int(size*0.6)]
+    x_train.extend(train)
+    y_train.extend([key] * len(train))
+
+    val = value[int(size*0.6):int(size*0.75)]
+    x_val.extend(val)
+    y_val.extend([key] * len(val))
+
+    test = value[int(size*0.75):]
+    x_test.extend(test)
+    y_test.extend([key] * len(test))
+
+    assert len(x_train) == len(y_train)
+    assert len(x_val) == len(y_val)
+    assert len(x_test) == len(y_test)
+
+
+x_train = np.array(x_train)
+y_train = np.array(y_train)
+x_val = np.array(x_val)
+y_val = np.array(y_val)
+x_test = np.array(x_test)
+y_test = np.array(y_test)
 
 # Model Template
 
@@ -72,10 +113,24 @@ model.compile(optimizer='sgd',
 # Train Model
 history = model.fit(x_train, y_train,
                     validation_data=(x_val, y_val),
-                    epochs=10,
+                    epochs=100,
                     batch_size=512)
 
 # Report Results
 
 print(history.history)
-model.predict()
+
+y_evaluated = model.predict(x=x_test, batch_size=512)
+y_test = list(map(get_value_from_hot_one_vector, list(map(list, list(y_test)))))
+
+good_count, total_count = 0, 0
+
+for idx, evaluated in enumerate(y_evaluated):
+    evaluated = get_value_from_hot_one_vector(list(evaluated))
+
+    if y_test[idx] == evaluated:
+        good_count += 1
+    total_count += 1
+
+print(good_count, total_count)
+print(good_count / total_count)
