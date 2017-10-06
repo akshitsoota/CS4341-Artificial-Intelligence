@@ -20,6 +20,7 @@ def generate_hot_one_vector(label, start=0, end=9):
 
     return original
 
+
 def get_value_from_hot_one_vector(vector):
     for idx, value in enumerate(vector):
         if value == 1:
@@ -64,25 +65,23 @@ x_test = []
 y_test = []
 
 for key, value in mapping.items():
-
     size = len(value)
 
-    train = value[0:int(size*0.6)]
+    train = value[0:int(size * 0.6)]
     x_train.extend(train)
     y_train.extend([key] * len(train))
 
-    val = value[int(size*0.6):int(size*0.75)]
+    val = value[int(size * 0.6):int(size * 0.75)]
     x_val.extend(val)
     y_val.extend([key] * len(val))
 
-    test = value[int(size*0.75):]
+    test = value[int(size * 0.75):]
     x_test.extend(test)
     y_test.extend([key] * len(test))
 
     assert len(x_train) == len(y_train)
     assert len(x_val) == len(y_val)
     assert len(x_test) == len(y_test)
-
 
 x_train = np.array(x_train)
 y_train = np.array(y_train)
@@ -97,8 +96,11 @@ model = Sequential()  # declare model
 model.add(Dense(100, input_shape=(28 * 28,), kernel_initializer='he_normal'))  # first layer
 model.add(Activation('relu'))
 
-model.add(Dense(50, kernel_initializer='he_normal'))  # second layer
-model.add(Activation('relu'))
+model.add(Dense(70, kernel_initializer='he_normal'))  # second layer
+model.add(Activation('selu'))
+
+model.add(Dense(30, kernel_initializer='he_normal'))  # second layer
+model.add(Activation('selu'))
 
 model.add(Dense(10, kernel_initializer='he_normal'))  # last layer
 model.add(Activation('softmax'))
@@ -112,23 +114,13 @@ model.compile(optimizer='sgd',
 history = model.fit(x_train, y_train,
                     validation_data=(x_val, y_val),
                     epochs=100,
-                    batch_size=512)
+                    batch_size=256)
 
 # Report Results
 
 print(history.history)
 
-y_evaluated = model.predict(x=x_test, batch_size=512)
-y_test = list(map(get_value_from_hot_one_vector, list(map(list, list(y_test)))))
-
-good_count, total_count = 0, 0
-
-for idx, evaluated in enumerate(y_evaluated):
-    evaluated = get_value_from_hot_one_vector(list(evaluated))
-
-    if y_test[idx] == evaluated:
-        good_count += 1
-    total_count += 1
-
-print(good_count, total_count)
-print(good_count / total_count)
+# Evaluate the model
+score = model.evaluate(x_test, y_test, verbose=0)
+print('Test loss:', score[0])
+print('Test accuracy:', score[1])
