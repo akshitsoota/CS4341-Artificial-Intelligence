@@ -87,13 +87,13 @@ y_test = np.array(y_test)
 
 model = Sequential()  # declare model
 model.add(Dense(100, input_shape=(28 * 28,), kernel_initializer='he_normal'))  # first layer
-model.add(Activation('tanh'))
-
-model.add(Dense(50, kernel_initializer='he_normal'))  # second layer
 model.add(Activation('selu'))
 
-model.add(Dense(30, kernel_initializer='he_normal'))  # third layer
+model.add(Dense(70, kernel_initializer='he_normal'))  # second layer
 model.add(Activation('relu'))
+
+model.add(Dense(40, kernel_initializer='he_normal'))  # second layer
+model.add(Activation('tanh'))
 
 model.add(Dense(10, kernel_initializer='he_normal'))  # last layer
 model.add(Activation('softmax'))
@@ -111,9 +111,31 @@ history = model.fit(x_train, y_train,
 
 # Report Results
 
+# score = model.evaluate(x_test, y_test, verbose=0)
+
 print(history.history)
+
 
 # Evaluate the model
 score = model.evaluate(x_test, y_test, batch_size=256, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
+
+# y_evaluated = model.predict(x=x_test, batch_size=512)
+# y_test = list(map(get_value_from_hot_one_vector, list(map(list, list(y_test)))))
+#
+# print('Test loss:', score[0])
+# print('Test accuracy:', score[1])
+
+
+# good_count, total_count = 0, 0
+#
+# for idx, evaluated in enumerate(y_evaluated):
+#     evaluated = get_value_from_hot_one_vector(list(evaluated))
+#
+#     if y_test[idx] == evaluated:
+#         good_count += 1
+#     total_count += 1
+#
+# print(good_count, total_count)
+# print(good_count / total_count)
