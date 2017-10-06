@@ -86,13 +86,13 @@ y_test = np.array(y_test)
 # Model Template
 
 model = Sequential()  # declare model
-model.add(Dense(100, input_shape=(28 * 28,), kernel_initializer='he_normal'))  # first layer
+model.add(Dense(100, input_shape=(28 * 28,), kernel_initializer='random_uniform'))  # first layer
 model.add(Activation('selu'))
 
-model.add(Dense(70, kernel_initializer='he_normal'))  # second layer
+model.add(Dense(70, kernel_initializer='random_uniform'))  # second layer
 model.add(Activation('relu'))
 
-model.add(Dense(40, kernel_initializer='he_normal'))  # third layer
+model.add(Dense(40, kernel_initializer='random_uniform'))  # third layer
 model.add(Activation('tanh'))
 
 model.add(Dense(10, kernel_initializer='he_normal'))  # last layer
@@ -117,3 +117,7 @@ print(history.history)
 score = model.evaluate(x_test, y_test, batch_size=256, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
+
+# Save the weights to the file
+output_file_name = "trained_model.h5"
+model.save_weights(output_file_name, overwrite=True)
