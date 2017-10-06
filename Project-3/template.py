@@ -144,5 +144,5 @@ print('Test loss:', score[0])
 print('Test accuracy:', score[1])
 
 ## Save the weights to the file (uncomment to run- needs h5py package)
-# output_file_name = "trained_model2.h5"
+# output_file_name = "trained_model.h5"
 # model.save_weights(output_file_name, overwrite=True)
