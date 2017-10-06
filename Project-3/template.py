@@ -87,13 +87,13 @@ y_test = np.array(y_test)
 
 model = Sequential()  # declare model
 model.add(Dense(100, input_shape=(28 * 28,), kernel_initializer='he_normal'))  # first layer
+model.add(Activation('tanh'))
+
+model.add(Dense(50, kernel_initializer='he_normal'))  # second layer
+model.add(Activation('selu'))
+
+model.add(Dense(30, kernel_initializer='he_normal'))  # third layer
 model.add(Activation('relu'))
-
-model.add(Dense(70, kernel_initializer='he_normal'))  # second layer
-model.add(Activation('selu'))
-
-model.add(Dense(30, kernel_initializer='he_normal'))  # second layer
-model.add(Activation('selu'))
 
 model.add(Dense(10, kernel_initializer='he_normal'))  # last layer
 model.add(Activation('softmax'))
@@ -114,6 +114,6 @@ history = model.fit(x_train, y_train,
 print(history.history)
 
 # Evaluate the model
-score = model.evaluate(x_test, y_test, verbose=0)
+score = model.evaluate(x_test, y_test, batch_size=256, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
