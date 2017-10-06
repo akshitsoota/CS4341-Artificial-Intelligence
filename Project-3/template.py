@@ -111,31 +111,9 @@ history = model.fit(x_train, y_train,
 
 # Report Results
 
-# score = model.evaluate(x_test, y_test, verbose=0)
-
 print(history.history)
-
 
 # Evaluate the model
 score = model.evaluate(x_test, y_test, batch_size=256, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
-
-# y_evaluated = model.predict(x=x_test, batch_size=512)
-# y_test = list(map(get_value_from_hot_one_vector, list(map(list, list(y_test)))))
-#
-# print('Test loss:', score[0])
-# print('Test accuracy:', score[1])
-
-
-# good_count, total_count = 0, 0
-#
-# for idx, evaluated in enumerate(y_evaluated):
-#     evaluated = get_value_from_hot_one_vector(list(evaluated))
-#
-#     if y_test[idx] == evaluated:
-#         good_count += 1
-#     total_count += 1
-#
-# print(good_count, total_count)
-# print(good_count / total_count)
