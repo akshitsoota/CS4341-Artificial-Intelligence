@@ -1,7 +1,8 @@
 import numpy as np
+import matplotlib.pyplot as plot
 from keras.layers import Dense, Activation
 from keras.models import Sequential
-
+from sklearn.metrics import classification_report,confusion_matrix
 
 def printimage(arr, char='X'):
     """Convert image data from an array to a string.
@@ -109,8 +110,32 @@ history = model.fit(x_train, y_train,
                     epochs=100,
                     batch_size=256)
 
-# Report Results
+#history = model.load_weights("trained_model.h5")
 
+# # Uncomment the following comment block to run accuracy plotting code and confusion matrix code
+# # Note- requires matplotlib and sklearn packages. Import statements are included at the top but commented out
+# # Adapted from http://learnandshare645.blogspot.in/2016/06/feeding-your-own-data-set-into-cnn.html
+# training_loss = history.history['loss']
+# validation_loss = history.history['val_loss']
+# training_accuracy = history.history['acc']
+# validation_accuracy = history.history['val_acc']
+# plot.figure(1, figsize=(7,5))
+# plot.plot(range(100), training_accuracy)
+# plot.plot(range(100), validation_accuracy)
+# plot.xlabel("Number of Epochs")
+# plot.ylabel("Accuracy of Validation Set")
+# plot.title("Training Set Accuracy vs Validation Set Accuracy")
+# plot.grid(True)
+# plot.legend(["Training Set", "Validation Set"])
+# plot.style.use(['classic'])
+# plot.savefig('accuracy.pdf')
+# Y_pred = model.predict(x_test)
+# print(Y_pred)
+# y_pred = np.argmax(Y_pred, axis=1)
+# print(y_pred)
+# print(confusion_matrix(np.argmax(y_test,axis=1), y_pred))
+
+# Report Results
 print(history.history)
 
 # Evaluate the model
@@ -118,6 +143,6 @@ score = model.evaluate(x_test, y_test, batch_size=256, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
 
-# Save the weights to the file
-output_file_name = "trained_model.h5"
-model.save_weights(output_file_name, overwrite=True)
+## Save the weights to the file (uncomment to run- needs h5py package)
+# output_file_name = "trained_model2.h5"
+# model.save_weights(output_file_name, overwrite=True)
