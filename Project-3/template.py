@@ -1,7 +1,7 @@
 import numpy as np
-# import matplotlib.pyplot as plot
 from keras.layers import Dense, Activation
 from keras.models import Sequential
+# import matplotlib.pyplot as plot
 # from sklearn.metrics import classification_report,confusion_matrix
 
 def printimage(arr, char='X'):
@@ -130,9 +130,12 @@ history = model.fit(x_train, y_train,
 # plot.style.use(['classic'])
 # plot.savefig('accuracy.pdf')
 # Y_pred = model.predict(x_test)
-# print(Y_pred)
+# # print(Y_pred)
 # y_pred = np.argmax(Y_pred, axis=1)
 # print(y_pred)
+# p = model.predict_proba(x_test) # to predict probability
+# print("\n")
+# print(classification_report(np.argmax(y_test,axis=1), y_pred))
 # print(confusion_matrix(np.argmax(y_test,axis=1), y_pred))
 
 # Report Results
