@@ -1,8 +1,8 @@
 import numpy as np
-import matplotlib.pyplot as plot
+# import matplotlib.pyplot as plot
 from keras.layers import Dense, Activation
 from keras.models import Sequential
-from sklearn.metrics import classification_report,confusion_matrix
+# from sklearn.metrics import classification_report,confusion_matrix
 
 def printimage(arr, char='X'):
     """Convert image data from an array to a string.
@@ -123,8 +123,8 @@ history = model.fit(x_train, y_train,
 # plot.plot(range(100), training_accuracy)
 # plot.plot(range(100), validation_accuracy)
 # plot.xlabel("Number of Epochs")
-# plot.ylabel("Accuracy of Validation Set")
-# plot.title("Training Set Accuracy vs Validation Set Accuracy")
+# plot.ylabel("Accuracy of Training & Validation Sets")
+# plot.title("Training and Validation Set Accuracy vs Number of Epochs")
 # plot.grid(True)
 # plot.legend(["Training Set", "Validation Set"])
 # plot.style.use(['classic'])
