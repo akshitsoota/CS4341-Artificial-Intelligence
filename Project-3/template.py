@@ -21,13 +21,6 @@ def generate_hot_one_vector(label, start=0, end=9):
     return original
 
 
-def get_value_from_hot_one_vector(vector):
-    for idx, value in enumerate(vector):
-        if value == 1:
-            return idx
-    return -1
-
-
 # Start loading up the files
 
 images = np.load("images.npy")
