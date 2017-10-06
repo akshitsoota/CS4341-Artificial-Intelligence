@@ -43,77 +43,83 @@ for idx, image in enumerate(images):
     else:
         mapping[the_tuple] = [image]
 
-# Shuffle the values in the mapping
+# Loop over this
+iteration_count = 0
+accuracy_sum = 0
+loss_sum = 0
 
-for key in range(len(mapping.keys())):
-    np.random.shuffle(mapping[tuple(generate_hot_one_vector(key))])
-    # import hashlib
-    # print(hashlib.sha1(str(mapping[tuple(generate_hot_one_vector(key))]).encode('utf-8')).hexdigest())
+while True:
+    # Shuffle the values in the mapping
 
-x_train = []
-y_train = []
-x_val = []
-y_val = []
-x_test = []
-y_test = []
+    for key in range(len(mapping.keys())):
+        np.random.shuffle(mapping[tuple(generate_hot_one_vector(key))])
 
-for key, value in mapping.items():
-    size = len(value)
+    x_train = []
+    y_train = []
+    x_val = []
+    y_val = []
+    x_test = []
+    y_test = []
 
-    train = value[0:int(size * 0.6)]
-    x_train.extend(train)
-    y_train.extend([key] * len(train))
+    for key, value in mapping.items():
+        size = len(value)
 
-    val = value[int(size * 0.6):int(size * 0.75)]
-    x_val.extend(val)
-    y_val.extend([key] * len(val))
+        train = value[0:int(size * 0.6)]
+        x_train.extend(train)
+        y_train.extend([key] * len(train))
 
-    test = value[int(size * 0.75):]
-    x_test.extend(test)
-    y_test.extend([key] * len(test))
+        val = value[int(size * 0.6):int(size * 0.75)]
+        x_val.extend(val)
+        y_val.extend([key] * len(val))
 
-    assert len(x_train) == len(y_train)
-    assert len(x_val) == len(y_val)
-    assert len(x_test) == len(y_test)
+        test = value[int(size * 0.75):]
+        x_test.extend(test)
+        y_test.extend([key] * len(test))
 
-x_train = np.array(x_train)
-y_train = np.array(y_train)
-x_val = np.array(x_val)
-y_val = np.array(y_val)
-x_test = np.array(x_test)
-y_test = np.array(y_test)
+        assert len(x_train) == len(y_train)
+        assert len(x_val) == len(y_val)
+        assert len(x_test) == len(y_test)
 
-# Model Template
+    x_train = np.array(x_train)
+    y_train = np.array(y_train)
+    x_val = np.array(x_val)
+    y_val = np.array(y_val)
+    x_test = np.array(x_test)
+    y_test = np.array(y_test)
 
-model = Sequential()  # declare model
-model.add(Dense(100, input_shape=(28 * 28,), kernel_initializer='he_normal'))  # first layer
-model.add(Activation('selu'))
+    # Model Template
 
-model.add(Dense(70, kernel_initializer='he_normal'))  # second layer
-model.add(Activation('relu'))
+    model = Sequential()  # declare model
+    model.add(Dense(100, input_shape=(28 * 28,), kernel_initializer='he_normal'))  # first layer
+    model.add(Activation('selu'))
 
-model.add(Dense(40, kernel_initializer='he_normal'))  # third layer
-model.add(Activation('tanh'))
+    model.add(Dense(70, kernel_initializer='he_normal'))  # second layer
+    model.add(Activation('relu'))
 
-model.add(Dense(10, kernel_initializer='he_normal'))  # last layer
-model.add(Activation('softmax'))
+    model.add(Dense(40, kernel_initializer='he_normal'))  # third layer
+    model.add(Activation('tanh'))
 
-# Compile Model
-model.compile(optimizer='sgd',
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
+    model.add(Dense(10, kernel_initializer='he_normal'))  # last layer
+    model.add(Activation('softmax'))
 
-# Train Model
-history = model.fit(x_train, y_train,
-                    validation_data=(x_val, y_val),
-                    epochs=100,
-                    batch_size=256)
+    # Compile Model
+    model.compile(optimizer='sgd',
+                  loss='categorical_crossentropy',
+                  metrics=['accuracy'])
 
-# Report Results
+    # Train Model
+    history = model.fit(x_train, y_train,
+                        validation_data=(x_val, y_val),
+                        epochs=100,
+                        batch_size=256,
+                        verbose=0)
 
-print(history.history)
+    # Evaluate the model
+    score = model.evaluate(x_test, y_test, batch_size=256, verbose=0)
+    loss_sum += score[0]
+    accuracy_sum += score[1]
+    iteration_count += 1
 
-# Evaluate the model
-score = model.evaluate(x_test, y_test, batch_size=256, verbose=0)
-print('Test loss:', score[0])
-print('Test accuracy:', score[1])
+    # Print out the stats
+    print("Iteration Number: {0}, Accuracy: {1:.5f}, Loss: {2:.5f}".format(iteration_count, score[1], score[0]))
+    print("Iteration Number: {0}, Accuracy Average: {1:.5f}, Loss Average: {2:.5f}".format(iteration_count, accuracy_sum / iteration_count, loss_sum / iteration_count))
