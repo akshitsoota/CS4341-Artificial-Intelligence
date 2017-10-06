@@ -92,7 +92,7 @@ model.add(Activation('selu'))
 model.add(Dense(70, kernel_initializer='he_normal'))  # second layer
 model.add(Activation('relu'))
 
-model.add(Dense(40, kernel_initializer='he_normal'))  # second layer
+model.add(Dense(40, kernel_initializer='he_normal'))  # third layer
 model.add(Activation('tanh'))
 
 model.add(Dense(10, kernel_initializer='he_normal'))  # last layer
