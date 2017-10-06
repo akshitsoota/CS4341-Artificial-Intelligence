@@ -1,7 +1,8 @@
 import numpy as np
+# import matplotlib.pyplot as plot
 from keras.layers import Dense, Activation
 from keras.models import Sequential
-
+# from sklearn.metrics import classification_report,confusion_matrix
 
 def printimage(arr, char='X'):
     """Convert image data from an array to a string.
@@ -19,12 +20,6 @@ def generate_hot_one_vector(label, start=0, end=9):
     original[label] = 1
 
     return original
-
-def get_value_from_hot_one_vector(vector):
-    for idx, value in enumerate(vector):
-        if value == 1:
-            return idx
-    return -1
 
 
 # Start loading up the files
@@ -64,25 +59,23 @@ x_test = []
 y_test = []
 
 for key, value in mapping.items():
-
     size = len(value)
 
-    train = value[0:int(size*0.6)]
+    train = value[0:int(size * 0.6)]
     x_train.extend(train)
     y_train.extend([key] * len(train))
 
-    val = value[int(size*0.6):int(size*0.75)]
+    val = value[int(size * 0.6):int(size * 0.75)]
     x_val.extend(val)
     y_val.extend([key] * len(val))
 
-    test = value[int(size*0.75):]
+    test = value[int(size * 0.75):]
     x_test.extend(test)
     y_test.extend([key] * len(test))
 
     assert len(x_train) == len(y_train)
     assert len(x_val) == len(y_val)
     assert len(x_test) == len(y_test)
-
 
 x_train = np.array(x_train)
 y_train = np.array(y_train)
@@ -94,14 +87,15 @@ y_test = np.array(y_test)
 # Model Template
 
 model = Sequential()  # declare model
-model.add(Dense(10, input_shape=(28 * 28,), kernel_initializer='he_normal'))  # first layer
+model.add(Dense(100, input_shape=(28 * 28,), kernel_initializer='random_uniform'))  # first layer
+model.add(Activation('selu'))
+
+model.add(Dense(70, kernel_initializer='random_uniform'))  # second layer
 model.add(Activation('relu'))
-#
-#
-#
-# Fill in Model Here
-#
-#
+
+model.add(Dense(40, kernel_initializer='random_uniform'))  # third layer
+model.add(Activation('tanh'))
+
 model.add(Dense(10, kernel_initializer='he_normal'))  # last layer
 model.add(Activation('softmax'))
 
@@ -114,23 +108,41 @@ model.compile(optimizer='sgd',
 history = model.fit(x_train, y_train,
                     validation_data=(x_val, y_val),
                     epochs=100,
-                    batch_size=512)
+                    batch_size=256)
+
+#history = model.load_weights("trained_model.h5")
+
+# # Uncomment the following comment block to run accuracy plotting code and confusion matrix code
+# # Note- requires matplotlib and sklearn packages. Import statements are included at the top but commented out
+# # Adapted from http://learnandshare645.blogspot.in/2016/06/feeding-your-own-data-set-into-cnn.html
+# training_loss = history.history['loss']
+# validation_loss = history.history['val_loss']
+# training_accuracy = history.history['acc']
+# validation_accuracy = history.history['val_acc']
+# plot.figure(1, figsize=(7,5))
+# plot.plot(range(100), training_accuracy)
+# plot.plot(range(100), validation_accuracy)
+# plot.xlabel("Number of Epochs")
+# plot.ylabel("Accuracy of Training & Validation Sets")
+# plot.title("Training and Validation Set Accuracy vs Number of Epochs")
+# plot.grid(True)
+# plot.legend(["Training Set", "Validation Set"])
+# plot.style.use(['classic'])
+# plot.savefig('accuracy.pdf')
+# Y_pred = model.predict(x_test)
+# print(Y_pred)
+# y_pred = np.argmax(Y_pred, axis=1)
+# print(y_pred)
+# print(confusion_matrix(np.argmax(y_test,axis=1), y_pred))
 
 # Report Results
-
 print(history.history)
 
-y_evaluated = model.predict(x=x_test, batch_size=512)
-y_test = list(map(get_value_from_hot_one_vector, list(map(list, list(y_test)))))
+# Evaluate the model
+score = model.evaluate(x_test, y_test, batch_size=256, verbose=0)
+print('Test loss:', score[0])
+print('Test accuracy:', score[1])
 
-good_count, total_count = 0, 0
-
-for idx, evaluated in enumerate(y_evaluated):
-    evaluated = get_value_from_hot_one_vector(list(evaluated))
-
-    if y_test[idx] == evaluated:
-        good_count += 1
-    total_count += 1
-
-print(good_count, total_count)
-print(good_count / total_count)
+## Save the weights to the file (uncomment to run- needs h5py package)
+# output_file_name = "trained_model.h5"
+# model.save_weights(output_file_name, overwrite=True)
