@@ -1,5 +1,9 @@
-GROUP MEMBERS: Ankit Kumar, Akshit Soota, Dan Alfred
-TEAM NAME: ASKAgents
+GROUP MEMBERS: Ankit Kumar, Akshit (Axe) Soota, Dan Alfred
+TEAM NAME: ASKAgents2
+(ASKAgents2 is the NEW SUBMISSION TEAM NAME)
+
+OLD TEAM NAME: ASKAgents
+(ASKAgents is the OLD SUBMISSION TEAM NAME)
 
 HOW TO COMPILE:
 A Jar version of our project has been included for testing, but if you would like to compile our source for
@@ -13,9 +17,9 @@ The compiled .class files should now be present in their respective directories.
 Additionally, our program was compiled and tested with Java 8, but should also compile on Java 7.
 
 HOW TO RUN:
-An executable of the src/ files has been included, named ASKAgents.jar. To run this, make sure the
+An executable of the src/ files has been included, named ASKAgents2.jar. To run this, make sure the
 Jar file is in the same folder as the referee and enter the following command in that folder:
-java -jar ASKAgents.jar
+java -jar ASKAgents2.jar
 
 Additionally, if you would like to run our program after following the compilation steps above, run the following 
 command from src/:
