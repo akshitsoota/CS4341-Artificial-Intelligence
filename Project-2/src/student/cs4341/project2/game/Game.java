@@ -75,9 +75,6 @@ public class Game {
         bestMoveSoFarI = bestMoveSoFar.first;
         bestMoveSoFarJ = bestMoveSoFar.second;
 
-        System.out.println("EARLY THREAD CHECK: Thread interrupted? =  " + Thread.currentThread().isInterrupted());
-        System.out.println("PLAY WITH OPPONENT BEST MOVE - i : " + bestMoveSoFarI + ", j : " + bestMoveSoFarJ + ", VAL = " + player.maxValue);
-
         // Shutdown after we've pulled out our values
         threading.shutdownNow();
 
@@ -115,8 +112,6 @@ public class Game {
         public void run() {
             int depth = 1;
 
-            System.out.println("THREAD CHECK: depth = " + depth + ", Thread interrupted? =  " + Thread.currentThread().isInterrupted());
-
             while (!Thread.currentThread().isInterrupted()) {
 
                 Pair<Integer, Integer> firstMove = Game.firstAvailableMoveIndex(currentState);
@@ -133,7 +128,6 @@ public class Game {
                 // Iterate through all possible moves on the board for us
                 for (int i = 0; i < currentState.length; i++) {
                     for (int j = 0; j < currentState[0].length; j++) {
-                        System.out.println("CURRENT_STATE = " + currentState[i][j]);
                         if (currentState[i][j] == SquareState.PINK) {
                             currentState[i][j] = MY_COLOR;
 
@@ -141,7 +135,6 @@ public class Game {
                             if (Evaluator.isStateWorthExpanding(currentState, i, j)) {
                                 int currentStateValue = iterativeDeepeningMove(currentState, depth, OPPONENT_COLOR, alpha, beta);
                                 // If the value found here is greater than our best so far, update the variables
-                                System.out.println("CURRENT_STATE_VALUE = " + currentStateValue);
                                 if (currentStateValue > currentMax) {
                                     currentMax = currentStateValue;
                                     maxI = i;
@@ -155,7 +148,6 @@ public class Game {
                     }
                 }
 
-                System.out.println("PLAY WITH OPPONENT BEST MOVE - i : " + maxI + ", j : " + maxJ + ", VAL = " + currentMax);
 
                 this.bestMoveSoFar = new Pair<>(maxI, maxJ);
                 this.maxValue = currentMax;
@@ -177,21 +169,18 @@ public class Game {
     private int iterativeDeepeningMove(SquareState[][] board, int depth, SquareState turn, int alpha, int beta) {
         // If our turn has ended, kill the thread and return a negative value
         if (Thread.currentThread().isInterrupted()) {
-            System.out.println("THREAD IS INTERRUPTED");
             return Integer.MIN_VALUE;
         }
 
         // First check if this board is terminal. If it is, return and halt execution
         final int terminalValue = Evaluator.isTerminal(board, MY_COLOR, OPPONENT_COLOR);
         if (terminalValue != 0) {
-            System.out.println("TERMINAL IS RETURNED " + terminalValue);
-            return terminalValue; //+ Evaluator.evaluateMove(board, MY_COLOR, OPPONENT_COLOR);
+            return terminalValue + Evaluator.evaluateMove(board, MY_COLOR, OPPONENT_COLOR);
         }
 
         // If we have reached the top of our depth, evaluate this move and return
         if (depth == 0) {
             int eval = Evaluator.evaluateMove(board, MY_COLOR, OPPONENT_COLOR);
-            System.out.println("EVALUATOR IS RETURNED " + eval);
             return eval;
         }
 
@@ -207,14 +196,12 @@ public class Game {
                         max = Math.max(max, iterativeDeepeningMove(board, depth - 1, OPPONENT_COLOR, alpha, beta));
                         board[i][j] = SquareState.PINK;
                         if (max >= beta) {
-                            System.out.println("FIRST MAX IS RETURNED " + max);
                             return max;
                         }
                         alpha = Math.max(alpha, max);
                     }
                 }
             }
-            System.out.println("SECOND MAX IS RETURNED " + max);
             return max;
         }
 
@@ -225,10 +212,9 @@ public class Game {
                 if ((board[i][j] == SquareState.PINK)) {
                     board[i][j] = OPPONENT_COLOR;
 
-                    min = Math.min(min, iterativeDeepeningMove(board, depth - 1, OPPONENT_COLOR, alpha, beta));
+                    min = Math.min(min, iterativeDeepeningMove(board, depth - 1, MY_COLOR, alpha, beta));
                     board[i][j] = SquareState.PINK;
                     if (min <= alpha) {
-                        System.out.println("FIRST MIN IS RETURNED " + min);
                         return min;
                     }
                     beta = Math.min(beta, min);
@@ -236,7 +222,6 @@ public class Game {
             }
         }
 
-        System.out.println("SECOND MIN IS RETURNED " + min);
         return min;
     }
 

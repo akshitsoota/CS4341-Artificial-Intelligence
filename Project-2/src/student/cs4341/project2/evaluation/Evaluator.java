@@ -51,7 +51,7 @@ public class Evaluator {
 		}
 
 
-	
+
 		// Go through all NWSE diagonals and count number of 2s, 3s and 4s
 		for(int i = 0; i < Game.ROW_NUMBERS; i++) {
 			int[] values = countInADiagNWSE(currentState, myColor, enemyColor, i, 0, 4, 3, 2);
@@ -64,6 +64,7 @@ public class Evaluator {
 			enemyTwos = enemyTwos + values[5] + values[5];
 			ourTwos = ourTwos + values[2] + valuesOther[2];
 		}
+
 
 		for(int i = 1; i < Game.COL_NUMBERS; i++) {
 			int[] values = countInADiagNWSE(currentState, myColor, enemyColor, 0, i, 4, 3, 2);
@@ -99,10 +100,12 @@ public class Evaluator {
 //			enemyTwos += values[5];
 //			ourTwos += values[2];
 //		}
-		
-		// System.out.println("Our twos = " + ourTwos + "..EnemyTwos =" + enemyTwos);
-		return ((263*ourFours) + (37*ourThrees) + (3*ourTwos) - (257*enemyFours) - (31*enemyThrees) - (2*enemyTwos));
-//		return ((257*ourFours) + (31*ourThrees) + (2*ourTwos) - (263*enemyFours) - (37*enemyThrees) - (3*enemyTwos));
+
+		 System.out.println("Our twos = " + ourTwos + "..EnemyTwos =" + enemyTwos);
+		System.out.println("Our three = " + ourThrees + "..EnemyThree =" + enemyThrees);
+		System.out.println("Our fours = " + ourFours + "..EnemyFour =" + enemyFours);
+//		return ((263*ourFours) + (37*ourThrees) + (3*ourTwos) - (257*enemyFours) - (31*enemyThrees) - (2*enemyTwos));
+		return ((257*ourFours) + (31*ourThrees) + (2*ourTwos) - (263*enemyFours) - (37*enemyThrees) - (3*enemyTwos));
 	}
 	
 	/**
@@ -406,7 +409,6 @@ public class Evaluator {
 				}
 			}
 		}
-		
 		// Return a new array to contain the lengths found
 		return new int[]{firstL1Counter, firstL2Counter, firstL3Counter, secondL1Counter, secondL2Counter, secondL3Counter};
 	}
@@ -656,7 +658,7 @@ public class Evaluator {
 
 	private static boolean openLengthDiagonalNESW(SquareState[][] currentState, SquareState color, int length, int i, int j) {
 		if ((i - length < 0) || (j + length >= Game.COL_NUMBERS) || (currentState[i - length][j + length] != SquareState.PINK)) {
-			return (j - 1 >= 0 && i + 1 < Game.ROW_NUMBERS) || currentState[i+1][j-1] == SquareState.PINK;
+			return ((((j - 1) >= 0) && (i + 1 < Game.ROW_NUMBERS)) && currentState[i+1][j-1] == SquareState.PINK);
 		}
 		return (j - 1 < 0 || i + 1 >= Game.ROW_NUMBERS) || currentState[i + 1][j - 1] != color;
 	}
