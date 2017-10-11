@@ -101,9 +101,6 @@ public class Evaluator {
 //			ourTwos += values[2];
 //		}
 
-		 System.out.println("Our twos = " + ourTwos + "..EnemyTwos =" + enemyTwos);
-		System.out.println("Our three = " + ourThrees + "..EnemyThree =" + enemyThrees);
-		System.out.println("Our fours = " + ourFours + "..EnemyFour =" + enemyFours);
 //		return ((263*ourFours) + (37*ourThrees) + (3*ourTwos) - (257*enemyFours) - (31*enemyThrees) - (2*enemyTwos));
 		return ((257*ourFours) + (31*ourThrees) + (2*ourTwos) - (263*enemyFours) - (37*enemyThrees) - (3*enemyTwos));
 	}
