@@ -268,7 +268,7 @@ def waitForPlay(prev_mod_info, move_file_name="move_file"):
 def play_gomoku(team1, team2):
     logging.info("Let the battle between %s and %s begin!" % (team1, team2))
     teams = [team1, team2]
-    random.shuffle(teams)
+    #random.shuffle(teams)
 
     def opponentOf(team):
         return teams[ (teams.index(team) - 1) % len(teams) ]

@@ -11,7 +11,7 @@ public class FileInterfaceImpl implements FileInterface {
     /**
      * The team name that we will be playing as
      */
-    private static final String GROUP_NAME = "Opponents";
+    private static final String GROUP_NAME = "ASKAgents2";
 
     private static final String FILE_MOVE = "move_file";
     private static final String FILE_GROUP_NAME = GROUP_NAME + ".go";

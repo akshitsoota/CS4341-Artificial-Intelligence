@@ -49,54 +49,60 @@ public class Evaluator {
 			enemyTwos += values[5];
 			ourTwos += values[2];
 		}
-	
+
+
+
 		// Go through all NWSE diagonals and count number of 2s, 3s and 4s
-		for(int i = (Game.ROW_NUMBERS - 6); i >= 0; i--) {
+		for(int i = 0; i < Game.ROW_NUMBERS; i++) {
 			int[] values = countInADiagNWSE(currentState, myColor, enemyColor, i, 0, 4, 3, 2);
-			
-			enemyFours += values[3];
-			ourFours += values[0];
-			enemyThrees += values[4];
-			ourThrees += values[1];
-			enemyTwos += values[5];
-			ourTwos += values[2];
+			int[] valuesOther =  countInADiagNESW(currentState, myColor, enemyColor, i, Game.COL_NUMBERS - 1, 4, 3, 2);
+
+			enemyFours = enemyFours + values[3] + valuesOther[3];
+			ourFours = ourFours + values[0] + valuesOther[0];
+			enemyThrees = enemyThrees + values[4] + valuesOther[4];
+			ourThrees = ourThrees + values[1] + valuesOther[1];
+			enemyTwos = enemyTwos + values[5] + values[5];
+			ourTwos = ourTwos + values[2] + valuesOther[2];
 		}
-		for(int i = 1; i < (Game.COL_NUMBERS - 6); i++) {
+
+
+		for(int i = 1; i < Game.COL_NUMBERS; i++) {
 			int[] values = countInADiagNWSE(currentState, myColor, enemyColor, 0, i, 4, 3, 2);
-			
-			enemyFours += values[3];
-			ourFours += values[0];
-			enemyThrees += values[4];
-			ourThrees += values[1];
-			enemyTwos += values[5];
-			ourTwos += values[2];
+			int[] valuesOther = countInADiagNESW(currentState, myColor, enemyColor, 0, i, 4, 3, 2);
+
+			enemyFours = enemyFours + values[3] + valuesOther[3];
+			ourFours = ourFours + values[0] + valuesOther[0];
+			enemyThrees = enemyThrees + values[4] + valuesOther[4];
+			ourThrees = ourThrees + values[1] + valuesOther[1];
+			enemyTwos = enemyTwos + values[5] + values[5];
+			ourTwos = ourTwos + values[2] + valuesOther[2];
 		}
 		
-		// Go through all SWNE diagonals and count number of 2s, 3s and 4s
-		for(int i = (Game.ROW_NUMBERS - 6); i >= 0; i--) {
-			int[] values = countInADiagSWNE(currentState, myColor, enemyColor, i, Game.COL_NUMBERS - 1, 4, 3, 2);
-			
-			enemyFours += values[3];
-			ourFours += values[0];
-			enemyThrees += values[4];
-			ourThrees += values[1];
-			enemyTwos += values[5];
-			ourTwos += values[2];
-		}
-		
-		for(int i = (Game.COL_NUMBERS - 6); i >= 0 ; i--) {
-			int[] values = countInADiagSWNE(currentState, myColor, enemyColor, 0, i, 4, 3, 2);
-			
-			enemyFours += values[3];
-			ourFours += values[0];
-			enemyThrees += values[4];
-			ourThrees += values[1];
-			enemyTwos += values[5];
-			ourTwos += values[2];
-		}
-		
-		// System.out.println("Our twos = " + ourTwos + "..EnemyTwos =" + enemyTwos);
-		return ((263*ourFours) + (37*ourThrees) + (3*ourTwos) - (257*enemyFours) - (31*enemyThrees) - (2*enemyTwos));
+//		// Go through all SWNE diagonals and count number of 2s, 3s and 4s
+//		for(int i = (Game.ROW_NUMBERS - 6); i >= 0; i--) {
+//			int[] values = countInADiagNESW(currentState, myColor, enemyColor, i, Game.COL_NUMBERS - 1, 4, 3, 2);
+//
+//			enemyFours += values[3];
+//			ourFours += values[0];
+//			enemyThrees += values[4];
+//			ourThrees += values[1];
+//			enemyTwos += values[5];
+//			ourTwos += values[2];
+//		}
+//
+//		for(int i = (Game.COL_NUMBERS - 6); i >= 0 ; i--) {
+//			int[] values = countInADiagNESW(currentState, myColor, enemyColor, 0, i, 4, 3, 2);
+//
+//			enemyFours += values[3];
+//			ourFours += values[0];
+//			enemyThrees += values[4];
+//			ourThrees += values[1];
+//			enemyTwos += values[5];
+//			ourTwos += values[2];
+//		}
+
+//		return ((263*ourFours) + (37*ourThrees) + (3*ourTwos) - (257*enemyFours) - (31*enemyThrees) - (2*enemyTwos));
+		return ((257*ourFours) + (31*ourThrees) + (2*ourTwos) - (263*enemyFours) - (37*enemyThrees) - (3*enemyTwos));
 	}
 	
 	/**
@@ -157,7 +163,7 @@ public class Evaluator {
 	 * @param row The row of the board to check
 	 * @param length1 How many stones in-a-row we are looking for
 	 * @param length2 Secondary number of stones in-a-row we are looking for
-	 * @param length 3 Tertiary number of stones in-a-row we are looking for
+	 * @param length3 Tertiary number of stones in-a-row we are looking for
 	 * @return An array with six elements: the first SquareState with length1 count, length2 count,
 	 * and length3 count, and the second SquareState with length1 count, length2 count, and length3 count
 	 */
@@ -300,36 +306,48 @@ public class Evaluator {
 			final SquareState thisPosition = currentState[i][j];
 			if (thisPosition == first) {
 				secondRT = 0; // We found the first color so break the running total of the second color
+				firstRT++;
 
-				if (firstRT >= length1) {
-					firstL1Counter++;
+				if ((firstRT >= length1)) {
+					if (openLengthDiagonalNWSE(currentState, first, length1, i, j)) {
+						firstL1Counter++;
+					}
 				}
 
 				if (firstRT >= length2) {
-					firstL2Counter++;
+					if (openLengthDiagonalNWSE(currentState, first, length2, i, j)) {
+						firstL2Counter++;
+					}
 				}
 
 				if (firstRT >= length3) {
-					firstL3Counter++;
+					if (openLengthDiagonalNWSE(currentState, first, length3, i, j)) {
+						firstL3Counter++;
+					}
 				}
 
-				firstRT++;
 			} else if (thisPosition == second) {
 				firstRT = 0; // We found the second color so break the running total for the first color
+				secondRT++;
 
 				if (secondRT >= length1) {
-					secondL1Counter++;
+					if (openLengthDiagonalNWSE(currentState, second, length1, i, j)) {
+						secondL1Counter++;
+					}
 				}
 
 				if (secondRT >= length2) {
-					secondL2Counter++;
+					if (openLengthDiagonalNWSE(currentState, second, length2, i, j)) {
+						secondL2Counter++;
+					}
 				}
 
 				if (secondRT >= length3) {
-					secondL3Counter++;
+					if (openLengthDiagonalNWSE(currentState, second, length3, i, j)) {
+						secondL3Counter++;
+					}
 				}
 
-				secondRT++;
 			}
 		}
 		
@@ -337,50 +355,61 @@ public class Evaluator {
 		return new int[]{firstL1Counter, firstL2Counter, firstL3Counter, secondL1Counter, secondL2Counter, secondL3Counter};
 	}
 	
-	private static int[] countInADiagSWNE(SquareState[][] currentState, SquareState first, SquareState second, int row, int col, int length1, int length2, int length3) {
+	private static int[] countInADiagNESW(SquareState[][] currentState, SquareState first, SquareState second, int row, int col, int length1, int length2, int length3) {
 		int firstRT = 0; int firstL1Counter = 0; int firstL2Counter = 0; int firstL3Counter = 0;
 		int secondRT = 0; int secondL1Counter = 0; int secondL2Counter = 0; int secondL3Counter = 0;
 
-		for(int i = row, j = col; i >= 0 && j >= 0; i--, j--) {
+		for(int i = row, j = col; i < Game.ROW_NUMBERS && j >= 0; i++, j--) {
 			final SquareState thisPosition = currentState[i][j];
 			if (thisPosition == first) {
 				secondRT = 0; // We found the first color so break the running total of the second color
+				firstRT++;
 
 				if (firstRT >= length1) {
-					firstL1Counter++;
+					if (openLengthDiagonalNESW(currentState, first, length1, i, j)) {
+						firstL1Counter++;
+					}
 				}
 
 				if (firstRT >= length2) {
-					firstL2Counter++;
+					if (openLengthDiagonalNESW(currentState, first, length2, i, j)) {
+						firstL2Counter++;
+					}
 				}
 
 				if (firstRT >= length3) {
-					firstL3Counter++;
+					if (openLengthDiagonalNESW(currentState, first, length3, i, j)) {
+						firstL3Counter++;
+					}
 				}
 
-				firstRT++;
 			} else if (thisPosition == second) {
 				firstRT = 0; // We found the second color so break the running total for the first color
+				secondRT++;
 
 				if (secondRT >= length1) {
-					secondL1Counter++;
+					if (openLengthDiagonalNESW(currentState, second, length1, i, j)) {
+						secondL1Counter++;
+					}
 				}
 
 				if (secondRT >= length2) {
-					secondL2Counter++;
+					if (openLengthDiagonalNESW(currentState, second, length2, i, j)) {
+						secondL2Counter++;
+					}
 				}
 
 				if (secondRT >= length3) {
-					secondL3Counter++;
+					if (openLengthDiagonalNESW(currentState, second, length3, i, j)) {
+						secondL3Counter++;
+					}
 				}
-
-				secondRT++;
 			}
 		}
-		
 		// Return a new array to contain the lengths found
 		return new int[]{firstL1Counter, firstL2Counter, firstL3Counter, secondL1Counter, secondL2Counter, secondL3Counter};
 	}
+
 	
 	/**
 	 * Used to search for any 5 in-a-rows on the board, indicating terminal state
@@ -422,8 +451,8 @@ public class Evaluator {
 		}
 		
 		// And the same from diagonals from NorthWest to SouthEast
-		for(int i = (Game.ROW_NUMBERS - 6); i >= 0; i--) {
-			int maxInNWSE = getMaxDiagNWSE(currentState, i, 0, color);
+		for(int i = 0; i < Game.COL_NUMBERS - 4; i++) {
+			int maxInNWSE = getMaxDiagNWSE(currentState, 0, i, color);
 			
 			// If there are at least 5 in a row in a given row, the board is terminal- return
 			if(maxInNWSE >= 5) {
@@ -437,8 +466,8 @@ public class Evaluator {
 		}
 		
 		// No need to double check diag at 0,0- start at 1
-		for(int i = 1; i < (Game.COL_NUMBERS - 6); i++) {
-			int maxInNWSE = getMaxDiagNWSE(currentState, 0, i, color);
+		for(int i = 1; i < Game.ROW_NUMBERS - 4; i++) {
+			int maxInNWSE = getMaxDiagNWSE(currentState, i, 0, color);
 			
 			// If there are at least 5 in a row in a given row, the board is terminal- return
 			if(maxInNWSE >= 5) {
@@ -453,8 +482,8 @@ public class Evaluator {
 		
 		
 		// And the same from diagonals from SouthWest to NorthEast
-		for(int i = (Game.ROW_NUMBERS - 6); i >= 0; i--) {
-			int maxInSWNE = getMaxDiagSWNE(currentState, i, Game.COL_NUMBERS - 1, color);
+		for(int i = 4; i < Game.COL_NUMBERS; i++) {
+			int maxInSWNE = getMaxDiagNESW(currentState, 0, i, color);
 			
 			// If there are at least 5 in a row in a given row, the board is terminal- return
 			if(maxInSWNE >= 5) {
@@ -467,8 +496,8 @@ public class Evaluator {
 			}
 		}
 		
-		for(int i = (Game.COL_NUMBERS - 6); i >= 0 ; i--) {
-			int maxInSWNE = getMaxDiagSWNE(currentState, 0, i, color);
+		for(int i = 1; i < Game.ROW_NUMBERS - 4 ; i++) {
+			int maxInSWNE = getMaxDiagNESW(currentState, i, Game.COL_NUMBERS - 1, color);
 			
 			// If there are at least 5 in a row in a given row, the board is terminal- return
 			if(maxInSWNE >= 5) {
@@ -563,10 +592,10 @@ public class Evaluator {
 	 * @param color The color of the stone to check with
 	 * @return The longest contiguous in-a-row of stones in this diagonal
 	 */
-	private static int getMaxDiagSWNE(SquareState[][] currentState, int row, int col, SquareState color) {
+	private static int getMaxDiagNESW(SquareState[][] currentState, int row, int col, SquareState color) {
 		int longestDiag = 0;
 		int currentDiag = 0;
-		for(int i = row, j = col; i >= 0 && j >= 0; i--, j--) {
+		for(int i = row, j = col; i < Game.ROW_NUMBERS && j >= 0; i++, j--) {
 			if(currentState[i][j] == color) {
 				currentDiag++;
 			} else {
@@ -615,6 +644,20 @@ public class Evaluator {
 
 		// If top is free, check if bottom side is not my color
 		return (j + 1 >= Game.COL_NUMBERS) || currentState[i][j + 1] != color;
+	}
+
+	private static boolean openLengthDiagonalNWSE(SquareState[][] currentState, SquareState color, int length, int i, int j) {
+		if (((j - length < 0) || (i - length < 0)) || (currentState[i - length][j - length] != SquareState.PINK)) {
+			return j + 1 < Game.COL_NUMBERS && i + 1 < Game.ROW_NUMBERS && currentState[i+1][j+1] == SquareState.PINK;
+		}
+		return (j + 1 >= Game.COL_NUMBERS || i + 1 >= Game.ROW_NUMBERS) || currentState[i+1][j+1] != color;
+	}
+
+	private static boolean openLengthDiagonalNESW(SquareState[][] currentState, SquareState color, int length, int i, int j) {
+		if ((i - length < 0) || (j + length >= Game.COL_NUMBERS) || (currentState[i - length][j + length] != SquareState.PINK)) {
+			return ((((j - 1) >= 0) && (i + 1 < Game.ROW_NUMBERS)) && currentState[i+1][j-1] == SquareState.PINK);
+		}
+		return (j - 1 < 0 || i + 1 >= Game.ROW_NUMBERS) || currentState[i + 1][j - 1] != color;
 	}
 	
 }
